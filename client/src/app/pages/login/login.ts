@@ -31,10 +31,9 @@ export class Login {
     this.error = null;
 
     this.auth.login({ email: this.email.trim(), password: this.password }).subscribe({
-      next: (res: any) => {
+      next: () => {
         this.loading = false;
-
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         this.loading = false;
@@ -43,3 +42,6 @@ export class Login {
     });
   }
 }
+
+// alice.schneider@example.com
+// Password123!
