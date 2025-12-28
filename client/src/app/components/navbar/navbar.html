@@ -1,0 +1,35 @@
+<nav class="navbar">
+  <div class="container navbar__container">
+    <a routerLink="/home" class="navbar__logo">CHIRP</a>
+
+    <form class="navbar__search" (submit)="$event.preventDefault()">
+      <input
+        type="search"
+        placeholder="Search"
+        name="keyword"
+        [(ngModel)]="keyword"
+        (input)="onKeywordInput()"
+      />
+      <button type="submit" aria-label="Search">
+        <mat-icon>search</mat-icon>
+      </button>
+    </form>
+
+    <div class="navbar__right">
+      <a
+        *ngIf="userId"
+        [routerLink]="['/users', userId]"
+        class="navbar__profile"
+        aria-label="Profile"
+      >
+        <div class="navbar__avatar"></div>
+      </a>
+
+      <a *ngIf="!auth.isLoggedIn()" routerLink="/login">Login</a>
+
+      <button *ngIf="auth.isLoggedIn()" type="button" class="linkish" (click)="logout()">
+        Logout
+      </button>
+    </div>
+  </div>
+</nav>
