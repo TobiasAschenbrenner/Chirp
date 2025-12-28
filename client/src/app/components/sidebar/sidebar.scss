@@ -1,0 +1,55 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  padding: 1rem;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+
+  width: 220px;
+}
+
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+
+  text-decoration: none;
+  color: inherit;
+
+  p {
+    margin: 0;
+  }
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.sidebar__icon {
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.active {
+  background: #ededed;
+  font-weight: 600;
+}
+
+/* Make the "Themes" item look like a link-row */
+.sidebar__button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}

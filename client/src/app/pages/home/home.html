@@ -1,14 +1,17 @@
 <section class="mainArea">
-  <h1>Home</h1>
+  <div class="layout">
+    <app-sidebar (openThemes)="openThemes()"></app-sidebar>
 
-  <div class="feed">
-    <article class="post" *ngFor="let post of posts">
-      <header class="post__header">
-        <strong>{{ post.author }}</strong>
-        <span class="post__date">{{ post.createdAt }}</span>
-      </header>
-
-      <p class="post__body">{{ post.body }}</p>
-    </article>
+    <div class="content">
+      <div class="feed">
+        <article class="post" *ngFor="let post of posts">
+          <header class="post__header">
+            <strong>{{ post.author }}</strong>
+            <span class="post__date">{{ post.createdAt }}</span>
+          </header>
+          <p class="post__body">{{ post.body }}</p>
+        </article>
+      </div>
+    </div>
   </div>
 </section>

@@ -1,0 +1,26 @@
+<menu class="sidebar">
+  <a
+    class="sidebar__item"
+    routerLink="/home"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <span class="sidebar__icon"><mat-icon>home</mat-icon></span>
+    <p>Home</p>
+  </a>
+
+  <a class="sidebar__item" routerLink="/messages" routerLinkActive="active">
+    <span class="sidebar__icon"><mat-icon>mail_outline</mat-icon></span>
+    <p>Messages</p>
+  </a>
+
+  <a class="sidebar__item" routerLink="/bookmarks" routerLinkActive="active">
+    <span class="sidebar__icon"><mat-icon>bookmark_border</mat-icon></span>
+    <p>Bookmarks</p>
+  </a>
+
+  <button class="sidebar__item sidebar__button" type="button" (click)="onOpenThemes()">
+    <span class="sidebar__icon"><mat-icon>brush</mat-icon></span>
+    <p>Themes</p>
+  </button>
+</menu>
