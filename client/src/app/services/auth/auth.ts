@@ -12,6 +12,13 @@ export interface LoginResponse {
   id: string;
 }
 
+export interface RegisterPayload {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 const TOKEN_KEY = 'chirp_token';
 const USER_ID_KEY = 'chirp_user_id';
 
@@ -51,5 +58,9 @@ export class Auth {
 
   private setUserId(id: string): void {
     localStorage.setItem(USER_ID_KEY, id);
+  }
+
+  register(payload: RegisterPayload) {
+    return this.http.post('/api/users/register', payload);
   }
 }

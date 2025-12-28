@@ -1,0 +1,63 @@
+<section class="register">
+  <div class="container register__container">
+    <h2>Sign up</h2>
+
+    <form (ngSubmit)="registerUser()">
+      <p *ngIf="error" class="form__error-message">{{ error }}</p>
+
+      <input
+        type="text"
+        name="fullName"
+        placeholder="Full name"
+        [(ngModel)]="userData.fullName"
+        autofocus
+      />
+
+      <input type="email" name="email" placeholder="Email" [(ngModel)]="userData.email" />
+
+      <div class="password__controller">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          name="password"
+          placeholder="Password"
+          [(ngModel)]="userData.password"
+        />
+
+        <button
+          type="button"
+          class="password__toggle"
+          (click)="togglePassword()"
+          aria-label="Toggle password visibility"
+        >
+          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </div>
+      <div class="password__controller">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          name="confirmPassword"
+          placeholder="Confirm password"
+          [(ngModel)]="userData.confirmPassword"
+        />
+
+        <button
+          type="button"
+          class="password__toggle"
+          (click)="togglePassword()"
+          aria-label="Toggle password visibility"
+        >
+          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </div>
+
+      <p>
+        Already have an account?
+        <a routerLink="/login">Sign in</a>
+      </p>
+
+      <button type="submit" class="btn primary" [disabled]="loading">
+        {{ loading ? 'Registering…' : 'Register' }}
+      </button>
+    </form>
+  </div>
+</section>
