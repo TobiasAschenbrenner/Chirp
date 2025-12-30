@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Sidebar } from '../../components/sidebar/sidebar';
@@ -17,10 +17,10 @@ type FeedMode = 'foryou' | 'following';
   styleUrls: ['./home.scss'],
 })
 export class Home implements OnInit {
-  error = '';
-  mode: FeedMode = 'foryou';
-
-  posts: Post[] = [];
+  mode = signal<FeedMode>('foryou');
+  posts = signal<Post[]>([]);
+  loading = signal(false);
+  error = signal('');
 
   constructor(private postsApi: Posts) {}
 
@@ -33,37 +33,46 @@ export class Home implements OnInit {
   }
 
   onModeChange(mode: FeedMode): void {
-    this.mode = mode;
+    this.mode.set(mode);
     this.loadPosts();
   }
 
   private loadPosts(): void {
+    this.loading.set(true);
+
     const request$ =
-      this.mode === 'foryou' ? this.postsApi.getPosts() : this.postsApi.getFollowingPosts();
+      this.mode() === 'foryou' ? this.postsApi.getPosts() : this.postsApi.getFollowingPosts();
 
     request$.subscribe({
-      next: (posts) => (this.posts = posts),
-      error: (err) => console.log(err),
+      next: (posts) => {
+        this.posts.set(posts);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.log('Load posts failed:', err);
+        this.loading.set(false);
+      },
     });
   }
 
   createPost(data: FormData): void {
-    this.error = '';
+    this.error.set('');
 
     this.postsApi.createPost(data).subscribe({
       next: (newPost) => {
-        if (this.mode === 'foryou') {
-          this.posts = [newPost, ...this.posts];
+        if (this.mode() === 'foryou') {
+          this.posts.update((current) => [newPost, ...current]);
         } else {
           this.loadPosts();
         }
       },
       error: (err) => {
         const msg = err?.error?.message || 'Failed to create post.';
-        this.error =
+        this.error.set(
           msg === "TypeError: Cannot read properties of null (reading 'image')"
             ? 'Please upload an image'
-            : msg;
+            : msg
+        );
       },
     });
   }

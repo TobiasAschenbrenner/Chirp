@@ -3,20 +3,22 @@
     <app-sidebar (openThemes)="openThemes()"></app-sidebar>
 
     <div class="content">
-      <app-create-post [error]="error" (createPost)="createPost($event)"></app-create-post>
+      <app-create-post [error]="error()" (createPost)="createPost($event)"></app-create-post>
 
       <app-for-you-or-following
-        [active]="mode"
+        [active]="mode()"
         (modeChange)="onModeChange($event)"
       ></app-for-you-or-following>
 
+      <p *ngIf="loading()">Loading…</p>
+
       <div class="feed">
-        <article class="post" *ngFor="let post of posts">
-          <header class="post__header">
-            <strong>{{ post.author }}</strong>
-            <span class="post__date">{{ post.createdAt }}</span>
-          </header>
+        <article class="post" *ngFor="let post of posts()">
           <p class="post__body">{{ post.body }}</p>
+
+          <img *ngIf="post.image" class="post__image" [src]="post.image" alt="Post image" />
+
+          <small class="post__meta">Creator: {{ post.creator }}</small>
         </article>
       </div>
     </div>
