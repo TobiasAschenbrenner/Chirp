@@ -5,7 +5,7 @@ import { Observable, shareReplay } from 'rxjs';
 export interface User {
   _id: string;
   fullName: string;
-  profilePhoto?: string;
+  profilePhoto: string;
 }
 
 @Injectable({ providedIn: 'root' })

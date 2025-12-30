@@ -1,7 +1,20 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  signal,
+  computed,
+  DestroyRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { Auth } from '../../services/auth/auth';
+import { Users, User } from '../../services/users/users';
 
 @Component({
   selector: 'app-create-post',
@@ -10,12 +23,38 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './create-post.html',
   styleUrls: ['./create-post.scss'],
 })
-export class CreatePost {
+export class CreatePost implements OnInit {
   @Input() error = '';
   @Output() createPost = new EventEmitter<FormData>();
 
   body = '';
   image: File | null = null;
+
+  user = signal<User | null>(null);
+
+  initials = computed(() => {
+    const name = this.user()?.fullName?.trim() || '';
+    if (!name) return '?';
+    const parts = name.split(/\s+/);
+    const first = parts[0]?.[0] ?? '';
+    const second = parts.length > 1 ? parts[1]?.[0] ?? '' : '';
+    return (first + second).toUpperCase();
+  });
+
+  constructor(private auth: Auth, private usersApi: Users, private destroyRef: DestroyRef) {}
+
+  ngOnInit(): void {
+    const userId = this.auth.getUserId();
+    if (!userId) return;
+
+    this.usersApi
+      .getUser(userId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (u) => this.user.set(u),
+        error: (err) => console.log(err),
+      });
+  }
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -28,9 +67,7 @@ export class CreatePost {
     const postData = new FormData();
     postData.set('body', this.body);
 
-    if (this.image) {
-      postData.set('image', this.image);
-    }
+    if (this.image) postData.set('image', this.image);
 
     this.createPost.emit(postData);
 

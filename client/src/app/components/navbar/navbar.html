@@ -17,12 +17,15 @@
 
     <div class="navbar__right">
       <a
-        *ngIf="userId"
+        *ngIf="auth.getUserId() as userId"
         [routerLink]="['/users', userId]"
         class="navbar__profile"
         aria-label="Profile"
       >
-        <div class="navbar__avatar"></div>
+        <div class="navbar__avatar">
+          <img *ngIf="user()?.profilePhoto" [src]="user()?.profilePhoto" alt="Profile" />
+          <span *ngIf="!user()?.profilePhoto">{{ initials() }}</span>
+        </div>
       </a>
 
       <a *ngIf="!auth.isLoggedIn()" routerLink="/login">Login</a>
