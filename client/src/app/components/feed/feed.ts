@@ -1,13 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnInit,
-  signal,
-  computed,
-  DestroyRef,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, signal, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -29,15 +20,6 @@ export class Feed implements OnInit {
 
   creator = signal<User | null>(null);
   creatorLoading = signal(false);
-
-  initials = computed(() => {
-    const name = this.creator()?.fullName?.trim() || '';
-    if (!name) return '?';
-    const parts = name.split(/\s+/);
-    const first = parts[0]?.[0] ?? '';
-    const second = parts.length > 1 ? parts[1]?.[0] ?? '' : '';
-    return (first + second).toUpperCase();
-  });
 
   constructor(private usersApi: Users, private destroyRef: DestroyRef) {}
 

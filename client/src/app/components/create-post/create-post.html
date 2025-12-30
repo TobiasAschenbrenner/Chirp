@@ -5,8 +5,7 @@
 
   <div class="createPost__top">
     <div class="createPost__avatar">
-      <img *ngIf="user()?.profilePhoto" [src]="user()?.profilePhoto" alt="Profile" />
-      <span *ngIf="!user()?.profilePhoto">{{ initials() }}</span>
+      <img *ngIf="user()?.profilePhoto" [src]="user()!.profilePhoto" alt="Profile" />
     </div>
 
     <textarea name="body" [(ngModel)]="body" placeholder="What's on your mind?" required></textarea>

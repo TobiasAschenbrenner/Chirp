@@ -23,8 +23,7 @@
         aria-label="Profile"
       >
         <div class="navbar__avatar">
-          <img *ngIf="user()?.profilePhoto" [src]="user()?.profilePhoto" alt="Profile" />
-          <span *ngIf="!user()?.profilePhoto">{{ initials() }}</span>
+          <img *ngIf="user()?.profilePhoto" [src]="user()!.profilePhoto" alt="Profile" />
         </div>
       </a>
 

@@ -1,10 +1,8 @@
 <article class="feed">
   <header class="feed__header">
     <div class="feed__header-left">
-      <!-- Avatar -->
       <div class="feed__avatar">
-        <img *ngIf="creator()?.profilePhoto" [src]="creator()?.profilePhoto" alt="Profile" />
-        <span *ngIf="!creator()?.profilePhoto">{{ initials() }}</span>
+        <img *ngIf="creator()?.profilePhoto" [src]="creator()!.profilePhoto" alt="Profile" />
       </div>
 
       <div class="feed__header-details">

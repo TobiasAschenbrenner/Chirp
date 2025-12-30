@@ -1,13 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnInit,
-  signal,
-  computed,
-  DestroyRef,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, signal, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,15 +22,6 @@ export class CreatePost implements OnInit {
   image: File | null = null;
 
   user = signal<User | null>(null);
-
-  initials = computed(() => {
-    const name = this.user()?.fullName?.trim() || '';
-    if (!name) return '?';
-    const parts = name.split(/\s+/);
-    const first = parts[0]?.[0] ?? '';
-    const second = parts.length > 1 ? parts[1]?.[0] ?? '' : '';
-    return (first + second).toUpperCase();
-  });
 
   constructor(private auth: Auth, private usersApi: Users, private destroyRef: DestroyRef) {}
 

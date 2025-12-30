@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Output,
-  OnInit,
-  signal,
-  computed,
-  DestroyRef,
-} from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, signal, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -28,15 +20,6 @@ export class Navbar implements OnInit {
   @Output() keywordChange = new EventEmitter<string>();
 
   user = signal<User | null>(null);
-
-  initials = computed(() => {
-    const name = this.user()?.fullName?.trim() || '';
-    if (!name) return '?';
-    const parts = name.split(/\s+/);
-    const first = parts[0]?.[0] ?? '';
-    const second = parts.length > 1 ? parts[1]?.[0] ?? '' : '';
-    return (first + second).toUpperCase();
-  });
 
   constructor(
     public auth: Auth,
