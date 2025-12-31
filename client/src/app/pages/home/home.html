@@ -1,20 +1,12 @@
-<section class="mainArea">
-  <div class="layout">
-    <app-sidebar (openThemes)="openThemes()"></app-sidebar>
+<app-create-post [error]="error()" (createPost)="createPost($event)"></app-create-post>
 
-    <div class="content">
-      <app-create-post [error]="error()" (createPost)="createPost($event)"></app-create-post>
+<app-for-you-or-following
+  [active]="mode()"
+  (modeChange)="onModeChange($event)"
+></app-for-you-or-following>
 
-      <app-for-you-or-following
-        [active]="mode()"
-        (modeChange)="onModeChange($event)"
-      ></app-for-you-or-following>
+<app-feed-skeleton *ngIf="loading()" [count]="3"></app-feed-skeleton>
 
-      <app-feed-skeleton *ngIf="loading()" [count]="3"></app-feed-skeleton>
-
-      <ng-container *ngIf="!loading()">
-        <app-feeds [posts]="posts()" (postUpdated)="onPostUpdated($event)"></app-feeds>
-      </ng-container>
-    </div>
-  </div>
-</section>
+<ng-container *ngIf="!loading()">
+  <app-feeds [posts]="posts()" (postUpdated)="onPostUpdated($event)"></app-feeds>
+</ng-container>
