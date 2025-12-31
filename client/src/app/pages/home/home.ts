@@ -4,6 +4,7 @@ import { CreatePost } from '../../components/create-post/create-post';
 import { ForYouOrFollowing } from '../../components/for-you-or-following/for-you-or-following';
 import { Posts, Post } from '../../services/posts/posts';
 import { FeedSkeleton } from '../../components/feed-skeleton/feed-skeleton';
+import { Users } from '../../services/users/users';
 
 import { Feeds } from '../../components/feeds/feeds';
 
@@ -21,11 +22,13 @@ export class Home implements OnInit {
   posts = signal<Post[]>([]);
   loading = signal(false);
   error = signal('');
+  bookmarkedIds = signal<Set<string>>(new Set());
 
-  constructor(private postsApi: Posts) {}
+  constructor(private usersApi: Users, private postsApi: Posts) {}
 
   ngOnInit(): void {
     this.loadPosts();
+    this.loadBookmarks();
   }
 
   openThemes(): void {
@@ -60,6 +63,16 @@ export class Home implements OnInit {
         console.log('Load posts failed:', err);
         this.loading.set(false);
       },
+    });
+  }
+
+  private loadBookmarks(): void {
+    this.usersApi.getBookmarks().subscribe({
+      next: (res) => {
+        const ids = new Set(res.bookmarks.map((p) => p._id));
+        this.bookmarkedIds.set(ids);
+      },
+      error: (err) => console.log(err),
     });
   }
 

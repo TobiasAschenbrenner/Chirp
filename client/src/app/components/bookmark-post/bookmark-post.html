@@ -1,0 +1,10 @@
+<button
+  type="button"
+  class="feed__footer-bookmark"
+  (click)="toggleBookmark()"
+  aria-label="Bookmark post"
+>
+  <mat-icon>
+    {{ bookmarked() ? 'bookmark' : 'bookmark_border' }}
+  </mat-icon>
+</button>

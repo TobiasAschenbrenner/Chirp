@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Users } from '../../services/users/users';
@@ -18,6 +18,8 @@ export class Bookmarks implements OnInit {
   bookmarks = signal<Post[]>([]);
   loading = signal(true);
   error = signal('');
+
+  bookmarkedIds = computed(() => new Set(this.bookmarks().map((p) => p._id)));
 
   constructor(private usersApi: Users) {}
 

@@ -12,6 +12,7 @@ import { Users, User } from '../../services/users/users';
 import { LikeDislikePost } from '../like-dislike-post/like-dislike-post';
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
 import { ProfileImage } from '../profile-image/profile-image';
+import { BookmarkPost } from '../bookmark-post/bookmark-post';
 
 @Component({
   selector: 'app-feed',
@@ -24,12 +25,14 @@ import { ProfileImage } from '../profile-image/profile-image';
     TimeAgoPipe,
     RouterModule,
     ProfileImage,
+    BookmarkPost,
   ],
   templateUrl: './feed.html',
   styleUrls: ['./feed.scss'],
 })
 export class Feed implements OnInit {
   @Input({ required: true }) post!: Post;
+  @Input() bookmarked = false;
   @Output() postUpdated = new EventEmitter<Post>();
   @Output() postDeleted = new EventEmitter<string>();
 

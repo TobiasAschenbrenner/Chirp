@@ -13,6 +13,7 @@ import { Post } from '../../services/posts/posts';
 })
 export class Feeds {
   @Input() posts: Post[] = [];
+  @Input() bookmarkedIds: Set<string> = new Set();
   @Output() postUpdated = new EventEmitter<Post>();
   @Output() postDeleted = new EventEmitter<string>();
 

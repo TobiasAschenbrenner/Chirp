@@ -47,14 +47,20 @@
   </div>
 
   <footer class="feed__footer">
-    <app-like-dislike-post
-      [post]="post"
-      (postUpdated)="emitUpdatedPost($event)"
-    ></app-like-dislike-post>
+    <div class="feed__footer-left">
+      <app-like-dislike-post
+        [post]="post"
+        (postUpdated)="emitUpdatedPost($event)"
+      ></app-like-dislike-post>
 
-    <a class="feed__action" [routerLink]="['/posts', post._id]" aria-label="Comments">
-      <mat-icon>chat_bubble_outline</mat-icon>
-      <small>{{ post.comments.length || 0 }}</small>
-    </a>
+      <a class="feed__action" [routerLink]="['/posts', post._id]" aria-label="Comments">
+        <mat-icon>chat_bubble_outline</mat-icon>
+        <small>{{ post.comments.length || 0 }}</small>
+      </a>
+    </div>
+
+    <div class="feed__footer-right">
+      <app-bookmark-post [postId]="post._id" [initialBookmarked]="bookmarked"></app-bookmark-post>
+    </div>
   </footer>
 </article>

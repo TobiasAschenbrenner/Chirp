@@ -63,4 +63,8 @@ export class Posts {
   editPost(postId: string, body: string) {
     return this.http.patch<Post>(`/api/posts/${postId}`, { body });
   }
+
+  toggleBookmark(postId: string) {
+    return this.http.get<{ bookmarks: string[] }>(`/api/posts/${postId}/bookmarks`);
+  }
 }

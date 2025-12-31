@@ -11,8 +11,7 @@
     <app-feeds
       *ngIf="bookmarks().length > 0"
       [posts]="bookmarks()"
-      (postUpdated)="onPostUpdated($event)"
-      (postDeleted)="onPostDeleted($event)"
+      [bookmarkedIds]="bookmarkedIds()"
     ></app-feeds>
   </ng-container>
 </section>

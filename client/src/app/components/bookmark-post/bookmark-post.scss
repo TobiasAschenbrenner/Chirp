@@ -1,0 +1,26 @@
+.feed__footer-bookmark {
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #000;
+  transition: color 0.2s ease, transform 0.15s ease;
+
+  mat-icon {
+    font-size: 22px;
+  }
+
+  &:hover {
+    color: #000;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+:host-context(.bookmarked) .feed__footer-bookmark {
+  color: #000;
+}
