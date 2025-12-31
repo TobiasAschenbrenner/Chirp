@@ -1,0 +1,40 @@
+<section class="profile">
+  <p *ngIf="error()" class="error">{{ error() }}</p>
+
+  <ng-container *ngIf="user() as u">
+    <header class="profile__header">
+      <img class="profile__avatar" [src]="u.profilePhoto" alt="Profile" />
+
+      <div class="profile__info">
+        <h2 class="profile__name">{{ u.fullName }}</h2>
+        <p class="profile__bio" *ngIf="u.bio">{{ u.bio }}</p>
+
+        <div class="profile__stats">
+          <span
+            ><strong>{{ u.followers?.length || 0 }}</strong> Followers</span
+          >
+          <span
+            ><strong>{{ u.following?.length || 0 }}</strong> Following</span
+          >
+        </div>
+      </div>
+    </header>
+
+    <h3 class="profile__posts-title">{{ u.fullName }}'s posts</h3>
+  </ng-container>
+
+  <section class="profile__posts">
+    <app-feed-skeleton *ngIf="loading()" [count]="3"></app-feed-skeleton>
+
+    <ng-container *ngIf="!loading()">
+      <p class="center" *ngIf="posts().length < 1">No posts by this user</p>
+
+      <app-feeds
+        *ngIf="posts().length > 0"
+        [posts]="posts()"
+        (postUpdated)="onPostUpdated($event)"
+        (postDeleted)="onPostDeleted($event)"
+      ></app-feeds>
+    </ng-container>
+  </section>
+</section>

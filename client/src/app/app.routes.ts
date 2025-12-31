@@ -4,6 +4,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 
 import { Home } from './pages/home/home';
+import { Profile } from './pages/profile/profile';
 import { SinglePost } from './pages/single-post/single-post';
 import { MainLayout } from './pages/main-layout/main-layout';
 
@@ -21,7 +22,7 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: Home },
       { path: 'posts/:id', component: SinglePost },
-
+      { path: 'users/:id', component: Profile },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

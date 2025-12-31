@@ -1,0 +1,42 @@
+.profile__header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.profile__avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid #dcdcdc;
+}
+
+.profile__name {
+  margin: 0;
+}
+
+.profile__bio {
+  margin: 0.5rem 0;
+  opacity: 0.9;
+}
+
+.profile__stats {
+  display: flex;
+  gap: 1rem;
+  opacity: 0.85;
+}
+
+.profile__posts-title {
+  margin: 1rem 0 0.5rem;
+}
+
+.center {
+  text-align: center;
+  opacity: 0.8;
+}
+
+.error {
+  color: red;
+}
