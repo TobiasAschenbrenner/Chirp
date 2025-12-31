@@ -7,7 +7,10 @@
   />
 
   <div class="comment__body">
-    <strong>{{ creator()?.creatorName || 'User' }}</strong>
+    <div class="comment__meta">
+      <strong>{{ creator()?.creatorName || 'User' }}</strong>
+      <small>{{ comment.createdAt | timeAgo }}</small>
+    </div>
     <p>{{ comment.comment }}</p>
   </div>
 

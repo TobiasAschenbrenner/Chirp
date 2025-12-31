@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Auth } from '../../services/auth/auth';
+import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
 
 type CommentCreator = {
   creatorId: string;
@@ -19,7 +20,7 @@ type Comment = {
 @Component({
   selector: 'app-post-comment',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, TimeAgoPipe],
   templateUrl: './post-comment.html',
   styleUrls: ['./post-comment.scss'],
 })
