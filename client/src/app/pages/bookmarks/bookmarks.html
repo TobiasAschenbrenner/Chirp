@@ -12,6 +12,7 @@
       *ngIf="bookmarks().length > 0"
       [posts]="bookmarks()"
       [bookmarkedIds]="bookmarkedIds()"
+      (bookmarkChanged)="onBookmarkChanged($event)"
     ></app-feeds>
   </ng-container>
 </section>

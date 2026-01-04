@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map, tap } from 'rxjs/operators';
 import { Observable, shareReplay } from 'rxjs';
 
 import { Post } from '../posts/posts';
@@ -18,6 +19,7 @@ export interface User {
 @Injectable({ providedIn: 'root' })
 export class Users {
   private cache = new Map<string, Observable<User>>();
+  private bookmarkIdsSig = signal<Set<string>>(new Set());
 
   constructor(private http: HttpClient) {}
 
@@ -50,5 +52,29 @@ export class Users {
 
   getBookmarks() {
     return this.http.get<{ bookmarks: Post[] }>(`/api/users/bookmarks`);
+  }
+
+  loadBookmarks(): Observable<Set<string>> {
+    return this.getBookmarks().pipe(
+      map((res) => new Set((res.bookmarks ?? []).map((p) => p._id))),
+      tap((ids) => this.bookmarkIdsSig.set(ids))
+    );
+  }
+
+  bookmarkIds(): Set<string> {
+    return this.bookmarkIdsSig();
+  }
+
+  isBookmarked(postId: string): boolean {
+    return this.bookmarkIdsSig().has(postId);
+  }
+
+  setBookmarked(postId: string, bookmarked: boolean): void {
+    this.bookmarkIdsSig.update((prev) => {
+      const next = new Set(prev);
+      if (bookmarked) next.add(postId);
+      else next.delete(postId);
+      return next;
+    });
   }
 }

@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Auth } from '../../services/auth/auth';
+import { Users } from '../../services/users/users';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class Login {
   showPassword = false;
   loading = false;
 
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(private auth: Auth, private usersApi: Users, private router: Router) {}
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -39,9 +40,17 @@ export class Login {
     this.loading = true;
 
     this.auth.login({ email, password }).subscribe({
-      next: (res) => {
-        this.loading = false;
-        this.router.navigate(['/home']);
+      next: () => {
+        this.usersApi.loadBookmarks().subscribe({
+          next: () => {
+            this.loading = false;
+            this.router.navigate(['/home']);
+          },
+          error: () => {
+            this.loading = false;
+            this.router.navigate(['/home']);
+          },
+        });
       },
       error: (err) => {
         this.loading = false;

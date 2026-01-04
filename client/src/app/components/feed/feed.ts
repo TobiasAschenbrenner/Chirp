@@ -39,6 +39,8 @@ export class Feed implements OnInit {
   @Output() postUpdated = new EventEmitter<Post>();
   @Output() postDeleted = new EventEmitter<string>();
 
+  @Output() bookmarkChanged = new EventEmitter<{ postId: string; bookmarked: boolean }>();
+
   creator = signal<User | null>(null);
   creatorLoading = signal(false);
 
@@ -86,6 +88,10 @@ export class Feed implements OnInit {
     const me = this.auth.getUserId();
     const owner = this.creatorId();
     return !!me && !!owner && me === owner;
+  }
+
+  onBookmarkChanged(e: { postId: string; bookmarked: boolean }): void {
+    this.bookmarkChanged.emit(e);
   }
 
   startEdit(): void {

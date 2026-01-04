@@ -60,7 +60,11 @@
     </div>
 
     <div class="feed__footer-right">
-      <app-bookmark-post [postId]="post._id" [initialBookmarked]="bookmarked"></app-bookmark-post>
+      <app-bookmark-post
+        [postId]="post._id"
+        [initialBookmarked]="bookmarked"
+        (changed)="onBookmarkChanged($event)"
+      ></app-bookmark-post>
     </div>
   </footer>
 

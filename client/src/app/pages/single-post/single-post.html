@@ -4,12 +4,11 @@
 
   <ng-container *ngIf="post() as p">
     <header class="feed__header">
-      <img
-        class="avatar"
+      <app-profile-image
         *ngIf="creator()?.profilePhoto"
         [src]="creator()!.profilePhoto"
-        alt="Profile"
-      />
+        size="sm"
+      ></app-profile-image>
 
       <div class="feed__header-details">
         <h4>{{ creator()?.fullName || 'User' }}</h4>
@@ -25,7 +24,7 @@
     </div>
 
     <footer class="feed__footer">
-      <div class="actions-left">
+      <div class="feed__footer-left">
         <app-like-dislike-post
           [post]="p"
           (postUpdated)="onPostUpdated($event)"
@@ -35,6 +34,13 @@
           <mat-icon>chat_bubble_outline</mat-icon>
           <small>{{ comments().length }}</small>
         </button>
+      </div>
+
+      <div class="feed__footer-right">
+        <app-bookmark-post
+          [postId]="p._id"
+          [initialBookmarked]="usersApi.isBookmarked(p._id)"
+        ></app-bookmark-post>
       </div>
     </footer>
 

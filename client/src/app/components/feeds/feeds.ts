@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { Feed } from '../feed/feed';
 import { Post } from '../../services/posts/posts';
+import { Users } from '../../services/users/users';
 
 @Component({
   selector: 'app-feeds',
@@ -16,6 +17,9 @@ export class Feeds {
   @Input() bookmarkedIds: Set<string> = new Set();
   @Output() postUpdated = new EventEmitter<Post>();
   @Output() postDeleted = new EventEmitter<string>();
+  @Output() bookmarkChanged = new EventEmitter<{ postId: string; bookmarked: boolean }>();
+
+  constructor(public usersApi: Users) {}
 
   onPostDeleted(id: string): void {
     this.postDeleted.emit(id);

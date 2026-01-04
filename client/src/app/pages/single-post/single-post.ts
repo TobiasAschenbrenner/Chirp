@@ -9,6 +9,9 @@ import { Comments as CommentsApi } from '../../services/comments/comments';
 import { LikeDislikePost } from '../../components/like-dislike-post/like-dislike-post';
 import { PostComment } from '../../components/post-comment/post-comment';
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
+import { BookmarkPost } from '../../components/bookmark-post/bookmark-post';
+import { ProfileImage } from '../../components/profile-image/profile-image';
+import { Users } from '../../services/users/users';
 
 @Component({
   selector: 'app-single-post',
@@ -21,6 +24,8 @@ import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
     LikeDislikePost,
     PostComment,
     TimeAgoPipe,
+    BookmarkPost,
+    ProfileImage,
   ],
   templateUrl: './single-post.html',
   styleUrls: ['./single-post.scss'],
@@ -35,7 +40,8 @@ export class SinglePost implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private postsApi: Posts,
-    private commentsApi: CommentsApi
+    private commentsApi: CommentsApi,
+    protected usersApi: Users
   ) {}
 
   ngOnInit(): void {

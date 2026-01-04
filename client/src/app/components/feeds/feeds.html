@@ -4,8 +4,9 @@
   <app-feed
     *ngFor="let post of posts"
     [post]="post"
-    [bookmarked]="bookmarkedIds.has(post._id)"
+    [bookmarked]="usersApi.isBookmarked(post._id)"
     (postUpdated)="postUpdated.emit($event)"
     (postDeleted)="postDeleted.emit($event)"
+    (bookmarkChanged)="bookmarkChanged.emit($event)"
   ></app-feed>
 </div>

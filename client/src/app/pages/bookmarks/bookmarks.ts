@@ -51,4 +51,10 @@ export class Bookmarks implements OnInit {
   onPostDeleted(postId: string): void {
     this.bookmarks.update((list) => list.filter((p) => p._id !== postId));
   }
+
+  onBookmarkChanged(e: { postId: string; bookmarked: boolean }): void {
+    if (!e.bookmarked) {
+      this.bookmarks.update((list) => list.filter((p) => p._id !== e.postId));
+    }
+  }
 }
