@@ -3,6 +3,10 @@ const assert = require("node:assert/strict");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 
+const CommentModel = require("../models/commentModel");
+const PostModel = require("../models/postModel");
+const UserModel = require("../models/userModel");
+
 const routes = require("../routes/routes");
 const { errorHandler } = require("../middleware/errorMiddleware");
 
@@ -47,6 +51,29 @@ const authToken = jwt.sign(
   process.env.JWT_SECRET,
   { expiresIn: "5m" },
 );
+
+const validPostId = "507f191e810c19729de860eb";
+const validCommentId = "507f191e810c19729de860ec";
+
+const mockCommentPersistence = (testContext) => {
+  testContext.mock.method(UserModel, "findById", async () => ({
+    fullName: "Security Test User",
+    profilePhoto: "https://example.com/avatar.png",
+  }));
+
+  const createCommentMock = testContext.mock.method(
+    CommentModel,
+    "create",
+    async (commentData) => ({
+      _id: validCommentId,
+      ...commentData,
+    }),
+  );
+
+  testContext.mock.method(PostModel, "findByIdAndUpdate", async () => ({}));
+
+  return createCommentMock;
+};
 
 test("rejects NoSQL operator objects in registration input", async () => {
   const response = await fetch(`${baseUrl}/api/users/register`, {
@@ -103,4 +130,93 @@ test("rejects malformed MongoDB resource IDs", async () => {
   });
 
   assert.equal(response.status, 400);
+});
+
+test("accepts valid profile input on the profile edit endpoint", async (t) => {
+  const updateUserMock = t.mock.method(
+    UserModel,
+    "findByIdAndUpdate",
+    async () => ({
+      _id: "507f191e810c19729de860ea",
+      fullName: "Updated Test User",
+      bio: "Updated biography",
+    }),
+  );
+
+  const response = await fetch(`${baseUrl}/api/users/edit`, {
+    method: "PATCH",
+    headers: {
+      authorization: `Bearer ${authToken}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      fullName: "Updated Test User",
+      bio: "Updated biography",
+    }),
+  });
+
+  assert.equal(response.status, 200);
+  assert.equal(updateUserMock.mock.callCount(), 1);
+});
+
+test("rejects non-string profile input", async (t) => {
+  const updateUserMock = t.mock.method(
+    UserModel,
+    "findByIdAndUpdate",
+    async () => ({}),
+  );
+
+  const response = await fetch(`${baseUrl}/api/users/edit`, {
+    method: "PATCH",
+    headers: {
+      authorization: `Bearer ${authToken}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      fullName: { $ne: null },
+      bio: "Updated biography",
+    }),
+  });
+
+  const responseBody = await response.json();
+
+  assert.equal(response.status, 400);
+  assert.equal(responseBody.message, "Invalid profile data");
+  assert.equal(updateUserMock.mock.callCount(), 0);
+});
+
+test("rejects NoSQL operator objects in comment input", async (t) => {
+  const createCommentMock = mockCommentPersistence(t);
+
+  const response = await fetch(`${baseUrl}/api/comments/${validPostId}`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${authToken}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      comment: { $ne: null },
+    }),
+  });
+
+  assert.equal(response.status, 400);
+  assert.equal(createCommentMock.mock.callCount(), 0);
+});
+
+test("rejects comments longer than 500 characters", async (t) => {
+  const createCommentMock = mockCommentPersistence(t);
+
+  const response = await fetch(`${baseUrl}/api/comments/${validPostId}`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${authToken}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      comment: "a".repeat(501),
+    }),
+  });
+
+  assert.equal(response.status, 400);
+  assert.equal(createCommentMock.mock.callCount(), 0);
 });
