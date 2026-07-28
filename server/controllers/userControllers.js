@@ -68,7 +68,9 @@ const loginUser = async (req, res, next) => {
     const lowercasedEmail = email.toLowerCase();
 
     // check if user exists
-    const user = await UserModel.findOne({ email: lowercasedEmail });
+    const user = await UserModel.findOne({
+      email: lowercasedEmail,
+    }).select("+password");
     if (!user) {
       return next(new HttpError("Invalid credentials", 422));
     }
@@ -128,7 +130,7 @@ const editUser = async (req, res, next) => {
     const editedUser = await UserModel.findByIdAndUpdate(
       req.user.id,
       { fullName, bio },
-      { new: true }
+      { new: true },
     );
     res.json(editedUser).status(200);
   } catch (error) {
@@ -152,26 +154,26 @@ const followUnfollowUser = async (req, res, next) => {
       const updatedUser = await UserModel.findByIdAndUpdate(
         userToFollowId,
         { $push: { followers: req.user.id } },
-        { new: true }
+        { new: true },
       );
 
       await UserModel.findByIdAndUpdate(
         req.user.id,
         { $push: { following: userToFollowId } },
-        { new: true }
+        { new: true },
       );
       res.json(updatedUser);
     } else {
       const updatedUser = await UserModel.findByIdAndUpdate(
         userToFollowId,
         { $pull: { followers: req.user.id } },
-        { new: true }
+        { new: true },
       );
 
       await UserModel.findByIdAndUpdate(
         req.user.id,
         { $pull: { following: userToFollowId } },
-        { new: true }
+        { new: true },
       );
       res.json(updatedUser);
     }
@@ -194,7 +196,7 @@ const changeUserAvatar = async (req, res, next) => {
     const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedMimeTypes.includes(avatar.mimetype)) {
       return next(
-        new HttpError("Only JPG, PNG, and WEBP images are allowed", 422)
+        new HttpError("Only JPG, PNG, and WEBP images are allowed", 422),
       );
     }
 
@@ -224,7 +226,7 @@ const changeUserAvatar = async (req, res, next) => {
         const updatedUser = await UserModel.findByIdAndUpdate(
           req.user.id,
           { profilePhoto: result.secure_url },
-          { new: true }
+          { new: true },
         );
 
         res.status(200).json(updatedUser);
@@ -249,7 +251,7 @@ const searchUsers = async (req, res, next) => {
     const page = Math.max(parseInt(req.query.page || "1", 10), 1);
     const limit = Math.min(
       Math.max(parseInt(req.query.limit || "10", 10), 1),
-      20
+      20,
     );
     const skip = (page - 1) * limit;
 

@@ -4,7 +4,11 @@ const userSchema = new Schema(
   {
     fullName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
     profilePhoto: {
       type: String,
       default:
@@ -16,7 +20,15 @@ const userSchema = new Schema(
     bookmarks: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (_document, serializedUser) => {
+        delete serializedUser.password;
+        return serializedUser;
+      },
+    },
+  },
 );
 
 userSchema.index({ fullName: 1 });
