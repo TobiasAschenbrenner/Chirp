@@ -5,13 +5,7 @@
     <form (ngSubmit)="loginUser()">
       <p *ngIf="error" class="form__error-message">{{ error }}</p>
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        [(ngModel)]="loginData.email"
-        autofocus
-      />
+      <input type="email" name="email" placeholder="Email" [(ngModel)]="loginData.email" />
 
       <div class="password">
         <input

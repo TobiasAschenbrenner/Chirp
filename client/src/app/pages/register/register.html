@@ -5,13 +5,7 @@
     <form (ngSubmit)="registerUser()">
       <p *ngIf="error" class="form__error-message">{{ error }}</p>
 
-      <input
-        type="text"
-        name="fullName"
-        placeholder="Full name"
-        [(ngModel)]="userData.fullName"
-        autofocus
-      />
+      <input type="text" name="fullName" placeholder="Full name" [(ngModel)]="userData.fullName" />
 
       <input type="email" name="email" placeholder="Email" [(ngModel)]="userData.email" />
       <div class="password">

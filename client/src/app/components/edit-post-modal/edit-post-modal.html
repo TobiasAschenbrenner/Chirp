@@ -1,5 +1,5 @@
-<form class="editPost" (click)="close($event)" (submit)="submit()">
-  <div class="editPost__container" (click)="$event.stopPropagation()">
+<form class="editPost" (click)="close($event)" (keydown.escape)="close()" (submit)="submit()">
+  <div class="editPost__container">
     <h3 class="editPost__title">Edit post</h3>
 
     <textarea
@@ -7,7 +7,6 @@
       [ngModel]="body()"
       (ngModelChange)="body.set($event)"
       placeholder="What's on your mind?"
-      autofocus
     ></textarea>
 
     <div class="editPost__actions">

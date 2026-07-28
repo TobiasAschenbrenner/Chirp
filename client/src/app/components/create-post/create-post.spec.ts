@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
@@ -17,7 +16,7 @@ class UsersMock {
       _id: 'u1',
       fullName: 'Test User',
       profilePhoto: 'https://example.com/p.jpg',
-    } as any)
+    } as any),
   );
 }
 
@@ -70,11 +69,11 @@ describe('CreatePost', () => {
     fixture.detectChanges();
 
     const textarea = fixture.nativeElement.querySelector(
-      'textarea[name="body"]'
+      'textarea[name="body"]',
     ) as HTMLTextAreaElement;
 
     const submitBtn = fixture.nativeElement.querySelector(
-      'button[type="submit"]'
+      'button[type="submit"]',
     ) as HTMLButtonElement;
 
     expect(textarea.disabled).toBe(true);
@@ -103,7 +102,7 @@ describe('CreatePost', () => {
         _id: 'u1',
         fullName: 'Test User',
         profilePhoto: 'https://example.com/p.jpg',
-      } as any)
+      } as any),
     );
 
     fixture.detectChanges();

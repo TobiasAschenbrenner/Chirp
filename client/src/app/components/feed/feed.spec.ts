@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Feed } from './feed';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 import { Users } from '../../services/users/users';
 import { Posts } from '../../services/posts/posts';

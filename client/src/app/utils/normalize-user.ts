@@ -1,4 +1,4 @@
-import { ApiUser, FollowerRef } from '../models/api-user.model';
+import { ApiUser } from '../models/api-user.model';
 import { User } from '../models/user.model';
 
 function toId(ref: string | { _id: string }): string {

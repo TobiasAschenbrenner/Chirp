@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs';
 import { vi } from 'vitest';
 
 import { UserProfile } from './user-profile';

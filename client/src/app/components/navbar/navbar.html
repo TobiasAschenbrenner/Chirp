@@ -1,5 +1,11 @@
 <nav class="navbar">
-  <div class="navbar__backdrop" *ngIf="open()" (click)="close()"></div>
+  <<button
+    type="button"
+    class="navbar__backdrop"
+    *ngIf="open()"
+    aria-label="Close search results"
+    (click)="close()"
+  ></button>
 
   <div class="container navbar__container">
     <a routerLink="/home" class="navbar__logo">CHIRP</a>

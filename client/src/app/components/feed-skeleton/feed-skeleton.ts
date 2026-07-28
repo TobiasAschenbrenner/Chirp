@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './feed-skeleton.html',
   styleUrls: ['./feed-skeleton.scss'],
 })
-export class FeedSkeleton {
+export class FeedSkeleton implements OnChanges {
   @Input() count = 3;
   items: ReadonlyArray<number> = [];
 
