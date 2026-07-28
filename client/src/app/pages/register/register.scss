@@ -24,6 +24,13 @@
   gap: 1.6rem;
 }
 
+.register form > .form__hint {
+  margin-top: -0.8rem;
+  color: var(--color-gray-600);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
 .register form input {
   width: 100%;
   padding: 1rem;
