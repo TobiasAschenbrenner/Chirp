@@ -27,11 +27,6 @@ const {
   getComment,
   deleteComment,
 } = require("../controllers/commentControllers");
-const {
-  createMessage,
-  getMessage,
-  getConversations,
-} = require("../controllers/messageControllers");
 
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -47,7 +42,6 @@ const {
 const validateId = validateObjectIdParam("id");
 const validatePostId = validateObjectIdParam("postId");
 const validateCommentId = validateObjectIdParam("commentId");
-const validateReceiverId = validateObjectIdParam("receiverId");
 
 // USER ROUTES
 router.post("/users/register", validateRegistrationBody, registerUser);
@@ -89,20 +83,5 @@ router.delete(
   validateCommentId,
   deleteComment,
 );
-
-// MESSAGE ROUTES
-router.post(
-  "/messages/:receiverId",
-  authMiddleware,
-  validateReceiverId,
-  createMessage,
-);
-router.get(
-  "/messages/:receiverId",
-  authMiddleware,
-  validateReceiverId,
-  getMessage,
-);
-router.get("/conversations", authMiddleware, getConversations);
 
 module.exports = router;
