@@ -3,17 +3,41 @@
     <h2>Sign up</h2>
 
     <form (ngSubmit)="registerUser()">
-      <p *ngIf="error" class="form__error-message">{{ error }}</p>
+      <p *ngIf="error" class="form__error-message">
+        {{ error }}
+      </p>
 
-      <input type="text" name="fullName" placeholder="Full name" [(ngModel)]="userData.fullName" />
+      <input
+        type="text"
+        name="fullName"
+        placeholder="Full name"
+        [(ngModel)]="userData.fullName"
+        [attr.maxlength]="validationLimits.fullName"
+        autocomplete="name"
+        required
+      />
 
-      <input type="email" name="email" placeholder="Email" [(ngModel)]="userData.email" />
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        [(ngModel)]="userData.email"
+        [attr.maxlength]="validationLimits.email"
+        autocomplete="email"
+        required
+      />
+
       <div class="password">
         <input
           [type]="showPassword ? 'text' : 'password'"
           name="password"
           placeholder="Password"
           [(ngModel)]="userData.password"
+          [attr.minlength]="validationLimits.registrationPassword"
+          [attr.maxlength]="validationLimits.passwordBytes"
+          autocomplete="new-password"
+          aria-describedby="password-requirements"
+          required
         />
 
         <button
@@ -22,9 +46,13 @@
           (click)="togglePassword()"
           aria-label="Toggle password visibility"
         >
-          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          <mat-icon>
+            {{ showPassword ? 'visibility_off' : 'visibility' }}
+          </mat-icon>
         </button>
       </div>
+
+      <p id="password-requirements" class="form__hint">Use at least 15 characters.</p>
 
       <div class="password">
         <input
@@ -32,6 +60,10 @@
           name="confirmPassword"
           placeholder="Confirm password"
           [(ngModel)]="userData.confirmPassword"
+          [attr.minlength]="validationLimits.registrationPassword"
+          [attr.maxlength]="validationLimits.passwordBytes"
+          autocomplete="new-password"
+          required
         />
 
         <button
@@ -40,7 +72,9 @@
           (click)="togglePassword()"
           aria-label="Toggle password visibility"
         >
-          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          <mat-icon>
+            {{ showPassword ? 'visibility_off' : 'visibility' }}
+          </mat-icon>
         </button>
       </div>
 

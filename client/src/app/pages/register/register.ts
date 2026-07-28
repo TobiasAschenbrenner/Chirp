@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { Router, RouterModule } from '@angular/router';
 
 import { Auth } from '../../services/auth/auth';
+import { EMAIL_PATTERN, utf8ByteLength, VALIDATION_LIMITS } from '../../utils/input-validation';
 
 @Component({
   selector: 'app-register',
@@ -14,6 +15,8 @@ import { Auth } from '../../services/auth/auth';
   styleUrls: ['./register.scss'],
 })
 export class Register {
+  readonly validationLimits = VALIDATION_LIMITS;
+
   userData = {
     fullName: '',
     email: '',
@@ -25,7 +28,10 @@ export class Register {
   showPassword = false;
   loading = false;
 
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(
+    private auth: Auth,
+    private router: Router,
+  ) {}
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -44,6 +50,31 @@ export class Register {
       return;
     }
 
+    if (fullName.length > VALIDATION_LIMITS.fullName) {
+      this.error = 'Full name must be 80 characters or fewer.';
+      return;
+    }
+
+    if (email.length > VALIDATION_LIMITS.email) {
+      this.error = 'Email must be 254 characters or fewer.';
+      return;
+    }
+
+    if (!EMAIL_PATTERN.test(email)) {
+      this.error = 'Please enter a valid email address.';
+      return;
+    }
+
+    if (password.length < VALIDATION_LIMITS.registrationPassword) {
+      this.error = 'Password must be at least 15 characters.';
+      return;
+    }
+
+    if (utf8ByteLength(password) > VALIDATION_LIMITS.passwordBytes) {
+      this.error = 'Password must not exceed 72 UTF-8 bytes.';
+      return;
+    }
+
     if (password !== confirmPassword) {
       this.error = 'Passwords do not match.';
       return;
@@ -51,15 +82,22 @@ export class Register {
 
     this.loading = true;
 
-    this.auth.register({ fullName, email, password, confirmPassword }).subscribe({
-      next: () => {
-        this.loading = false;
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.loading = false;
-        this.error = err?.error?.message || 'Registration failed.';
-      },
-    });
+    this.auth
+      .register({
+        fullName,
+        email,
+        password,
+        confirmPassword,
+      })
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          void this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          this.loading = false;
+          this.error = err?.error?.message || 'Registration failed.';
+        },
+      });
   }
 }

@@ -7,6 +7,8 @@ import { Posts as PostsApi } from '../../services/posts/posts';
 import { Post } from '../../models/post.model';
 import { ApiError } from '../../models/api-error.model';
 
+import { VALIDATION_LIMITS } from '../../utils/input-validation';
+
 @Component({
   selector: 'app-edit-post-modal',
   standalone: true,
@@ -24,7 +26,12 @@ export class EditPostModal implements OnInit {
   loading = signal(false);
   error = signal('');
 
-  constructor(private postsApi: PostsApi, private destroyRef: DestroyRef) {}
+  readonly validationLimits = VALIDATION_LIMITS;
+
+  constructor(
+    private postsApi: PostsApi,
+    private destroyRef: DestroyRef,
+  ) {}
 
   ngOnInit(): void {
     this.loadPost();
@@ -32,10 +39,15 @@ export class EditPostModal implements OnInit {
 
   submit(): void {
     const body = this.body().trim();
-    if (!body) return;
+
+    if (!body || body.length > VALIDATION_LIMITS.post) {
+      return;
+    }
 
     this.loading.set(true);
     this.error.set('');
+
+    // Keep the existing API call below.
 
     this.postsApi
       .editPost(this.postId, body)

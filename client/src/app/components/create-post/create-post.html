@@ -16,6 +16,7 @@
       name="body"
       [(ngModel)]="body"
       placeholder="What's on your mind?"
+      [attr.maxlength]="validationLimits.post"
       required
       [disabled]="loading"
     ></textarea>

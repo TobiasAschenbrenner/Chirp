@@ -123,7 +123,7 @@ describe('SinglePost', () => {
 
   it('should delete a comment', () => {
     postsApi.getPost.mockReturnValue(
-      of({ ...mockPost, comments: [{ _id: 'c1', comment: 'Hi', creator: 'u1' }] })
+      of({ ...mockPost, comments: [{ _id: 'c1', comment: 'Hi', creator: 'u1' }] }),
     );
 
     commentsApi.deleteComment.mockReturnValue(of(null));
@@ -136,5 +136,38 @@ describe('SinglePost', () => {
 
     expect(commentsApi.deleteComment).toHaveBeenCalledWith('c1');
     expect(cmp.comments().length).toBe(0);
+  });
+
+  it('should not create comments longer than 500 characters', () => {
+    postsApi.getPost.mockReturnValue(of(mockPost));
+    commentsApi.createComment.mockReturnValue(
+      of({
+        _id: 'c1',
+        comment: 'Comment',
+        creator: 'u1',
+      }),
+    );
+
+    const fixture = TestBed.createComponent(SinglePost);
+    fixture.detectChanges();
+
+    const component = fixture.componentInstance;
+    component.commentText.set('a'.repeat(501));
+    component.createComment();
+
+    expect(commentsApi.createComment).not.toHaveBeenCalled();
+  });
+
+  it('should expose the comment limit through the textarea', () => {
+    postsApi.getPost.mockReturnValue(of(mockPost));
+
+    const fixture = TestBed.createComponent(SinglePost);
+    fixture.detectChanges();
+
+    const textarea = fixture.nativeElement.querySelector(
+      'textarea[name="comment"]',
+    ) as HTMLTextAreaElement;
+
+    expect(textarea.maxLength).toBe(500);
   });
 });

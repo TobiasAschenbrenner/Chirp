@@ -15,7 +15,7 @@ describe('EditPostModal', () => {
       _id: 'p1',
       body: 'Hello',
       ...overrides,
-    } as Post);
+    }) as Post;
 
   function createFixture(postOverrides: Partial<Post> = {}) {
     const fixture = TestBed.createComponent(EditPostModal);
@@ -208,5 +208,26 @@ describe('EditPostModal', () => {
     } as unknown as MouseEvent);
 
     expect(closedSpy).not.toHaveBeenCalled();
+  });
+
+  it('submit should not update posts longer than 500 characters', () => {
+    const fixture = createFixture();
+
+    postsApi.editPost.mockReturnValue(of(makePost({ body: 'Updated' })));
+
+    fixture.componentInstance.body.set('a'.repeat(501));
+    fixture.componentInstance.submit();
+
+    expect(postsApi.editPost).not.toHaveBeenCalled();
+  });
+
+  it('should expose the post limit through the textarea', () => {
+    const fixture = createFixture();
+
+    const textarea = fixture.nativeElement.querySelector(
+      'textarea[name="body"]',
+    ) as HTMLTextAreaElement;
+
+    expect(textarea.maxLength).toBe(500);
   });
 });
