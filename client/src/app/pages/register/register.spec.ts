@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { Register } from './register';
-import { provideRouter } from '@angular/router';
-import { Router } from '@angular/router';
-import { vi } from 'vitest';
+import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { vi } from 'vitest';
 
 import { Auth } from '../../services/auth/auth';
+import { Register } from './register';
+
+const VALID_PASSWORD = 'climb safely 42';
 
 class AuthStub {
   register(payload: {
@@ -43,6 +44,7 @@ describe('Register', () => {
 
   it('should create', () => {
     const fixture = createComponent();
+
     expect(fixture.componentInstance).toBeTruthy();
   });
 
@@ -66,8 +68,8 @@ describe('Register', () => {
     component.userData = {
       fullName: '',
       email: 'test@example.com',
-      password: 'secret',
-      confirmPassword: 'secret',
+      password: VALID_PASSWORD,
+      confirmPassword: VALID_PASSWORD,
     };
 
     component.registerUser();
@@ -83,13 +85,102 @@ describe('Register', () => {
     component.userData = {
       fullName: 'Tobi',
       email: 'test@example.com',
-      password: 'secret',
-      confirmPassword: 'different',
+      password: VALID_PASSWORD,
+      confirmPassword: 'climb safely 43',
     };
 
     component.registerUser();
 
     expect(component.error).toBe('Passwords do not match.');
+    expect(auth.register).not.toHaveBeenCalled();
+  });
+
+  it('should reject registration passwords shorter than 15 characters', () => {
+    const fixture = createComponent();
+    const component = fixture.componentInstance;
+    const password = 'a'.repeat(14);
+
+    component.userData = {
+      fullName: 'Tobi',
+      email: 'test@example.com',
+      password,
+      confirmPassword: password,
+    };
+
+    component.registerUser();
+
+    expect(component.error).toBe('Password must be at least 15 characters.');
+    expect(auth.register).not.toHaveBeenCalled();
+  });
+
+  it('should reject passwords exceeding 72 UTF-8 bytes', () => {
+    const fixture = createComponent();
+    const component = fixture.componentInstance;
+    const password = '🔐'.repeat(19);
+
+    expect(new TextEncoder().encode(password).length).toBeGreaterThan(72);
+
+    component.userData = {
+      fullName: 'Tobi',
+      email: 'test@example.com',
+      password,
+      confirmPassword: password,
+    };
+
+    component.registerUser();
+
+    expect(component.error).toBe('Password must not exceed 72 UTF-8 bytes.');
+    expect(auth.register).not.toHaveBeenCalled();
+  });
+
+  it('should reject full names longer than 80 characters', () => {
+    const fixture = createComponent();
+    const component = fixture.componentInstance;
+
+    component.userData = {
+      fullName: 'a'.repeat(81),
+      email: 'test@example.com',
+      password: VALID_PASSWORD,
+      confirmPassword: VALID_PASSWORD,
+    };
+
+    component.registerUser();
+
+    expect(component.error).toBe('Full name must be 80 characters or fewer.');
+    expect(auth.register).not.toHaveBeenCalled();
+  });
+
+  it('should reject invalid email addresses', () => {
+    const fixture = createComponent();
+    const component = fixture.componentInstance;
+
+    component.userData = {
+      fullName: 'Tobi',
+      email: 'not-an-email',
+      password: VALID_PASSWORD,
+      confirmPassword: VALID_PASSWORD,
+    };
+
+    component.registerUser();
+
+    expect(component.error).toBe('Please enter a valid email address.');
+    expect(auth.register).not.toHaveBeenCalled();
+  });
+
+  it('should reject email addresses longer than 254 characters', () => {
+    const fixture = createComponent();
+    const component = fixture.componentInstance;
+
+    component.userData = {
+      fullName: 'Tobi',
+      email: `${'a'.repeat(243)}@example.com`,
+      password: VALID_PASSWORD,
+      confirmPassword: VALID_PASSWORD,
+    };
+
+    component.registerUser();
+
+    expect(component.error).toBe('Email must be 254 characters or fewer.');
     expect(auth.register).not.toHaveBeenCalled();
   });
 
@@ -100,8 +191,8 @@ describe('Register', () => {
     component.userData = {
       fullName: '  Tobi  ',
       email: '  test@example.com  ',
-      password: 'secret',
-      confirmPassword: 'secret',
+      password: VALID_PASSWORD,
+      confirmPassword: VALID_PASSWORD,
     };
 
     component.registerUser();
@@ -109,8 +200,8 @@ describe('Register', () => {
     expect(auth.register).toHaveBeenCalledWith({
       fullName: 'Tobi',
       email: 'test@example.com',
-      password: 'secret',
-      confirmPassword: 'secret',
+      password: VALID_PASSWORD,
+      confirmPassword: VALID_PASSWORD,
     });
 
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
@@ -121,7 +212,7 @@ describe('Register', () => {
     vi.spyOn(auth, 'register').mockReturnValueOnce(
       throwError(() => ({
         error: { message: 'Email already exists' },
-      }))
+      })),
     );
 
     const fixture = createComponent();
@@ -130,8 +221,8 @@ describe('Register', () => {
     component.userData = {
       fullName: 'Tobi',
       email: 'test@example.com',
-      password: 'secret',
-      confirmPassword: 'secret',
+      password: VALID_PASSWORD,
+      confirmPassword: VALID_PASSWORD,
     };
 
     component.registerUser();
