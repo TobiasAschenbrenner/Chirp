@@ -8,12 +8,17 @@ const MAX_FULL_NAME_LENGTH = 80;
 const MAX_EMAIL_LENGTH = 254;
 const MIN_PASSWORD_LENGTH = 6;
 const MAX_PASSWORD_BYTES = 72;
+const MAX_BIO_LENGTH = 160;
 const MAX_POST_LENGTH = 500;
+const MAX_COMMENT_LENGTH = 500;
 
 const isNonEmptyString = (value, maxLength) =>
   typeof value === "string" &&
   value.trim().length > 0 &&
   value.length <= maxLength;
+
+const isStringWithinLength = (value, maxLength) =>
+  typeof value === "string" && value.length <= maxLength;
 
 const isValidEmail = (value) =>
   isNonEmptyString(value, MAX_EMAIL_LENGTH) && EMAIL_PATTERN.test(value.trim());
@@ -54,6 +59,23 @@ const validateLoginBody = (req, res, next) => {
   next();
 };
 
+const validateProfileBody = (req, res, next) => {
+  const { fullName, bio } = req.body ?? {};
+
+  const profileIsValid =
+    isNonEmptyString(fullName, MAX_FULL_NAME_LENGTH) &&
+    isStringWithinLength(bio, MAX_BIO_LENGTH);
+
+  if (!profileIsValid) {
+    return next(new HttpError("Invalid profile data", 400));
+  }
+
+  req.body.fullName = fullName.trim();
+  req.body.bio = bio.trim();
+
+  next();
+};
+
 const validatePostBody = (req, res, next) => {
   const { body } = req.body ?? {};
 
@@ -71,6 +93,23 @@ const validatePostBody = (req, res, next) => {
   next();
 };
 
+const validateCommentBody = (req, res, next) => {
+  const { comment } = req.body ?? {};
+
+  if (!isNonEmptyString(comment, MAX_COMMENT_LENGTH)) {
+    return next(
+      new HttpError(
+        `Comment must contain between 1 and ${MAX_COMMENT_LENGTH} characters`,
+        400,
+      ),
+    );
+  }
+
+  req.body.comment = comment.trim();
+
+  next();
+};
+
 const validateObjectIdParam = (paramName) => (req, res, next) => {
   const objectId = req.params[paramName];
 
@@ -84,6 +123,8 @@ const validateObjectIdParam = (paramName) => (req, res, next) => {
 module.exports = {
   validateRegistrationBody,
   validateLoginBody,
+  validateProfileBody,
   validatePostBody,
+  validateCommentBody,
   validateObjectIdParam,
 };

@@ -38,7 +38,9 @@ const authMiddleware = require("../middleware/authMiddleware");
 const {
   validateRegistrationBody,
   validateLoginBody,
+  validateProfileBody,
   validatePostBody,
+  validateCommentBody,
   validateObjectIdParam,
 } = require("../middleware/requestValidation");
 
@@ -52,17 +54,9 @@ router.post("/users/register", validateRegistrationBody, registerUser);
 router.post("/users/login", validateLoginBody, loginUser);
 router.get("/users/search", authMiddleware, searchUsers);
 router.get("/users/bookmarks", authMiddleware, getUserBookmarks);
+router.patch("/users/edit", authMiddleware, validateProfileBody, editUser);
 router.get("/users/:id", authMiddleware, validateId, getUser);
 router.get("/users", authMiddleware, getUsers);
-router.patch("/users/:id", authMiddleware, validateId, editUser);
-router.get(
-  "/users/:id/follow-unfollow",
-  authMiddleware,
-  validateId,
-  followUnfollowUser,
-);
-router.post("/users/avatar", authMiddleware, changeUserAvatar);
-router.get("/users/:id/posts", authMiddleware, validateId, getUserPosts);
 
 // POST ROUTES
 router.post("/posts", authMiddleware, validatePostBody, createPost);
@@ -81,7 +75,13 @@ router.get("/posts/:id/like", authMiddleware, validateId, likeDislikePost);
 router.get("/posts/:id/bookmarks", authMiddleware, validateId, createBookmark);
 
 // COMMENT ROUTES
-router.post("/comments/:postId", authMiddleware, validatePostId, createComment);
+router.post(
+  "/comments/:postId",
+  authMiddleware,
+  validatePostId,
+  validateCommentBody,
+  createComment,
+);
 router.get("/comments/:postId", authMiddleware, validatePostId, getComment);
 router.delete(
   "/comments/:commentId",
