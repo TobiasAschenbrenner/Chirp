@@ -51,6 +51,7 @@
           name="comment"
           [ngModel]="commentText()"
           (ngModelChange)="commentText.set($event)"
+          [attr.maxlength]="validationLimits.comment"
         ></textarea>
 
         <button class="singlePost__comments-btn" type="submit" aria-label="Send">

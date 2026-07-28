@@ -7,6 +7,7 @@
       [ngModel]="body()"
       (ngModelChange)="body.set($event)"
       placeholder="What's on your mind?"
+      [attr.maxlength]="validationLimits.post"
     ></textarea>
 
     <div class="editPost__actions">

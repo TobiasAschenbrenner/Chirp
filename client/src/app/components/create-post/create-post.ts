@@ -20,6 +20,8 @@ import { User } from '../../models/user.model';
 import { ProfileImage } from '../profile-image/profile-image';
 import { ApiError } from '../../models/api-error.model';
 
+import { VALIDATION_LIMITS } from '../../utils/input-validation';
+
 @Component({
   selector: 'app-create-post',
   standalone: true,
@@ -39,10 +41,18 @@ export class CreatePost implements OnInit {
 
   user = signal<User | null>(null);
 
-  constructor(private auth: Auth, private usersApi: Users, private destroyRef: DestroyRef) {}
+  readonly validationLimits = VALIDATION_LIMITS;
+
+  constructor(
+    private auth: Auth,
+    private usersApi: Users,
+    private destroyRef: DestroyRef,
+  ) {}
 
   get canSubmit(): boolean {
-    return !this.loading && this.body.trim().length > 0;
+    const bodyLength = this.body.trim().length;
+
+    return !this.loading && bodyLength > 0 && bodyLength <= VALIDATION_LIMITS.post;
   }
 
   ngOnInit(): void {

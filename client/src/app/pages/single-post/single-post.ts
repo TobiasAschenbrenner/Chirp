@@ -16,6 +16,8 @@ import { Users } from '../../services/users/users';
 import { Post, PostUser } from '../../models/post.model';
 import { Comment } from '../../models/comment.model';
 
+import { VALIDATION_LIMITS } from '../../utils/input-validation';
+
 @Component({
   selector: 'app-single-post',
   standalone: true,
@@ -39,6 +41,8 @@ export class SinglePost implements OnInit {
 
   readonly commentText = signal('');
 
+  readonly validationLimits = VALIDATION_LIMITS;
+
   readonly creator = computed<PostUser | null>(() => {
     const c = this.post()?.creator;
     return !c || typeof c === 'string' ? null : c;
@@ -59,7 +63,7 @@ export class SinglePost implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly postsApi: Posts,
     private readonly commentsApi: CommentsApi,
-    protected readonly usersApi: Users
+    protected readonly usersApi: Users,
   ) {}
 
   ngOnInit(): void {
@@ -74,7 +78,10 @@ export class SinglePost implements OnInit {
     if (!p) return;
 
     const text = this.commentText().trim();
-    if (!text) return;
+
+    if (!text || text.length > VALIDATION_LIMITS.comment) {
+      return;
+    }
 
     this.error.set('');
 
@@ -124,7 +131,7 @@ export class SinglePost implements OnInit {
 
   private removeComment(post: Post, commentId: string): Post {
     const nextComments = (post.comments ?? []).filter(
-      (c) => typeof c === 'string' || c._id !== commentId
+      (c) => typeof c === 'string' || c._id !== commentId,
     );
 
     return { ...post, comments: nextComments };
