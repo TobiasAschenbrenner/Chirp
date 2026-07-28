@@ -1,11 +1,46 @@
 const HttpError = require("../models/errorModel");
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const { randomUUID } = require("node:crypto");
 const fs = require("fs");
 const path = require("path");
 const cloudinary = require("../utils/cloudinary");
+const RefreshSessionModel = require("../models/refreshSessionModel");
+const {
+  REFRESH_COOKIE_NAME,
+  createAccessToken,
+  createRefreshToken,
+  hashRefreshToken,
+  getRefreshTokenExpiry,
+  getRefreshCookieOptions,
+  getRefreshCookieClearOptions,
+} = require("../utils/authTokens");
+
+const createRefreshSession = async (userId) => {
+  const refreshToken = createRefreshToken();
+
+  await RefreshSessionModel.create({
+    user: userId,
+    tokenHash: hashRefreshToken(refreshToken),
+    expiresAt: getRefreshTokenExpiry(),
+  });
+
+  return refreshToken;
+};
+
+const clearRefreshCookie = (res) => {
+  res.clearCookie(REFRESH_COOKIE_NAME, getRefreshCookieClearOptions());
+};
+
+const sendAuthenticationResponse = (res, userId, refreshToken) => {
+  res.cookie(REFRESH_COOKIE_NAME, refreshToken, getRefreshCookieOptions());
+  res.set("Cache-Control", "no-store");
+
+  return res.status(200).json({
+    token: createAccessToken(userId),
+    id: String(userId),
+  });
+};
 
 // REGISTER USER
 // POST: /api/users/register
@@ -81,13 +116,75 @@ const loginUser = async (req, res, next) => {
     if (!comparePasswords) {
       return next(new HttpError("Invalid credentials", 422));
     }
-    const token = await jwt.sign({ id: user?._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    // res.json({ token, id: user?._id, ...userInfo }).status(200);
-    res.json({ token, id: user?._id }).status(200);
+    const refreshToken = await createRefreshSession(user._id);
+
+    return sendAuthenticationResponse(res, user._id, refreshToken);
   } catch (error) {
     return next(new HttpError(error));
+  }
+};
+
+// REFRESH ACCESS TOKEN
+// POST: /api/users/refresh
+// UNPROTECTED
+const refreshAccessToken = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME];
+
+    if (!refreshToken) {
+      clearRefreshCookie(res);
+
+      return next(new HttpError("Invalid or expired refresh token", 401));
+    }
+
+    const session = await RefreshSessionModel.findOneAndDelete({
+      tokenHash: hashRefreshToken(refreshToken),
+      expiresAt: { $gt: new Date() },
+    });
+
+    if (!session) {
+      clearRefreshCookie(res);
+
+      return next(new HttpError("Invalid or expired refresh token", 401));
+    }
+
+    const userExists = await UserModel.exists({
+      _id: session.user,
+    });
+
+    if (!userExists) {
+      clearRefreshCookie(res);
+
+      return next(new HttpError("Invalid or expired refresh token", 401));
+    }
+
+    const nextRefreshToken = await createRefreshSession(session.user);
+
+    return sendAuthenticationResponse(res, session.user, nextRefreshToken);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+// LOGOUT USER
+// POST: /api/users/logout
+// UNPROTECTED
+const logoutUser = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME];
+
+    if (refreshToken) {
+      await RefreshSessionModel.deleteOne({
+        tokenHash: hashRefreshToken(refreshToken),
+      });
+    }
+
+    clearRefreshCookie(res);
+
+    return res.status(204).send();
+  } catch (error) {
+    clearRefreshCookie(res);
+    return next(error);
   }
 };
 
@@ -283,6 +380,8 @@ const searchUsers = async (req, res, next) => {
 module.exports = {
   registerUser,
   loginUser,
+  refreshAccessToken,
+  logoutUser,
   getUser,
   getUsers,
   editUser,

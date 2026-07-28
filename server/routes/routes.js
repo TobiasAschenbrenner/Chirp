@@ -3,6 +3,8 @@ const router = require("express").Router();
 const {
   registerUser,
   loginUser,
+  refreshAccessToken,
+  logoutUser,
   getUser,
   getUsers,
   editUser,
@@ -46,6 +48,8 @@ const validateCommentId = validateObjectIdParam("commentId");
 // USER ROUTES
 router.post("/users/register", validateRegistrationBody, registerUser);
 router.post("/users/login", validateLoginBody, loginUser);
+router.post("/users/refresh", refreshAccessToken);
+router.post("/users/logout", logoutUser);
 router.get("/users/search", authMiddleware, searchUsers);
 router.get("/users/bookmarks", authMiddleware, getUserBookmarks);
 router.patch("/users/edit", authMiddleware, validateProfileBody, editUser);
