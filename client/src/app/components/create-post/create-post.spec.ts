@@ -211,4 +211,27 @@ describe('CreatePost', () => {
     expect(() => fixture.detectChanges()).not.toThrow();
     expect(usersApi.getUser).toHaveBeenCalledWith('u1');
   });
+
+  it('onSubmit: should not emit posts longer than 500 characters', () => {
+    fixture.detectChanges();
+
+    component.loading = false;
+    component.body = 'a'.repeat(501);
+
+    const emitSpy = vi.spyOn(component.createPost, 'emit');
+
+    component.onSubmit();
+
+    expect(emitSpy).not.toHaveBeenCalled();
+  });
+
+  it('should expose the post limit through the textarea', () => {
+    fixture.detectChanges();
+
+    const textarea = fixture.nativeElement.querySelector(
+      'textarea[name="body"]',
+    ) as HTMLTextAreaElement;
+
+    expect(textarea.maxLength).toBe(500);
+  });
 });
