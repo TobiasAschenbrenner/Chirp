@@ -93,7 +93,7 @@ describe('EditProfileDialog', () => {
       expect.objectContaining({
         fullName: 'Updated Name',
         bio: 'Updated bio',
-      })
+      }),
     );
 
     expect(component.saving).toBe(true);
@@ -114,7 +114,7 @@ describe('EditProfileDialog', () => {
     vi.spyOn(users, 'updateProfile').mockReturnValueOnce(
       throwError(() => ({
         error: { message: 'Update failed' },
-      }))
+      })),
     );
 
     const fixture = TestBed.createComponent(EditProfileDialog);
@@ -125,5 +125,74 @@ describe('EditProfileDialog', () => {
     expect(component.error).toBe('Update failed');
     expect(component.saving).toBe(false);
     expect(dialogRef.close).not.toHaveBeenCalled();
+  });
+
+  it('should accept full names containing up to 80 characters', () => {
+    const fixture = TestBed.createComponent(EditProfileDialog);
+    const component = fixture.componentInstance;
+
+    component.form.controls.fullName.setValue('a'.repeat(80));
+
+    expect(component.form.controls.fullName.valid).toBe(true);
+  });
+
+  it('should reject full names longer than 80 characters', () => {
+    const fixture = TestBed.createComponent(EditProfileDialog);
+    const component = fixture.componentInstance;
+
+    component.form.controls.fullName.setValue('a'.repeat(81));
+
+    expect(component.form.controls.fullName.valid).toBe(false);
+  });
+
+  it('should reject whitespace-only full names', () => {
+    const fixture = TestBed.createComponent(EditProfileDialog);
+    const component = fixture.componentInstance;
+
+    component.form.controls.fullName.setValue('   ');
+
+    expect(component.form.controls.fullName.valid).toBe(false);
+  });
+
+  it('should reject biographies longer than 160 characters', () => {
+    const fixture = TestBed.createComponent(EditProfileDialog);
+    const component = fixture.componentInstance;
+
+    component.form.controls.bio.setValue('a'.repeat(161));
+
+    expect(component.form.controls.bio.valid).toBe(false);
+  });
+
+  it('should trim profile data before submitting', () => {
+    const fixture = TestBed.createComponent(EditProfileDialog);
+    const component = fixture.componentInstance;
+
+    component.form.setValue({
+      fullName: '  Updated Name  ',
+      bio: '  Updated biography  ',
+    });
+
+    component.submit();
+
+    expect(users.updateProfile).toHaveBeenCalledWith({
+      fullName: 'Updated Name',
+      bio: 'Updated biography',
+    });
+  });
+
+  it('should expose the backend limits through HTML attributes', () => {
+    const fixture = TestBed.createComponent(EditProfileDialog);
+    fixture.detectChanges();
+
+    const fullNameInput = fixture.nativeElement.querySelector(
+      'input[formControlName="fullName"]',
+    ) as HTMLInputElement;
+
+    const bioTextarea = fixture.nativeElement.querySelector(
+      'textarea[formControlName="bio"]',
+    ) as HTMLTextAreaElement;
+
+    expect(fullNameInput.maxLength).toBe(80);
+    expect(bioTextarea.maxLength).toBe(160);
   });
 });
