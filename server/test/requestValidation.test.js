@@ -7,10 +7,28 @@ const CommentModel = require("../models/commentModel");
 const PostModel = require("../models/postModel");
 const UserModel = require("../models/userModel");
 
+const {
+  validateRegistrationBody,
+  validateLoginBody,
+} = require("../middleware/requestValidation");
+
 const routes = require("../routes/routes");
 const { errorHandler } = require("../middleware/errorMiddleware");
 
 process.env.JWT_SECRET = "chirp-validation-test-secret";
+
+const runValidator = (validator, body) => {
+  let nextCalled = false;
+  let nextError;
+
+  validator({ body }, {}, (error) => {
+    nextCalled = true;
+    nextError = error;
+  });
+
+  assert.equal(nextCalled, true);
+  return nextError;
+};
 
 const app = express();
 
@@ -249,4 +267,54 @@ test("keeps active profile action routes reachable", async () => {
       avatar: 422,
     },
   );
+});
+
+test("requires at least 15 characters for new registration passwords", () => {
+  const password = "a".repeat(14);
+
+  const error = runValidator(validateRegistrationBody, {
+    fullName: "Security Test User",
+    email: "security-test@example.com",
+    password,
+    confirmPassword: password,
+  });
+
+  assert.equal(error?.code, 400);
+});
+
+test("accepts a 15-character registration passphrase", () => {
+  const password = "climb safely 42";
+
+  const error = runValidator(validateRegistrationBody, {
+    fullName: "Security Test User",
+    email: "security-test@example.com",
+    password,
+    confirmPassword: password,
+  });
+
+  assert.equal(error, undefined);
+});
+
+test("keeps six-character passwords valid for legacy login", () => {
+  const error = runValidator(validateLoginBody, {
+    email: "existing-user@example.com",
+    password: "secret",
+  });
+
+  assert.equal(error, undefined);
+});
+
+test("rejects registration passwords over the bcrypt byte limit", () => {
+  const password = "🔐".repeat(19);
+
+  assert.ok(Buffer.byteLength(password, "utf8") > 72);
+
+  const error = runValidator(validateRegistrationBody, {
+    fullName: "Security Test User",
+    email: "security-test@example.com",
+    password,
+    confirmPassword: password,
+  });
+
+  assert.equal(error?.code, 400);
 });
