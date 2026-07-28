@@ -20,7 +20,11 @@ export class Login {
   showPassword = false;
   loading = false;
 
-  constructor(private auth: Auth, private usersApi: Users, private router: Router) {}
+  constructor(
+    private auth: Auth,
+    private usersApi: Users,
+    private router: Router,
+  ) {}
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -59,6 +63,3 @@ export class Login {
     });
   }
 }
-
-// alice.schneider@example.com
-// Password123!

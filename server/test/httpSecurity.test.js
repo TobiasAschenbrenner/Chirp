@@ -51,11 +51,16 @@ test("sets security headers and removes the Express disclosure header", async ()
   );
 });
 
-test("allows the production frontend origin but not arbitrary origins", async () => {
-  const [productionResponse, untrustedResponse] = await Promise.all([
+test("allows both production frontend origins but not arbitrary origins", async () => {
+  const [apexResponse, wwwResponse, untrustedResponse] = await Promise.all([
     fetch(`${baseUrl}/api/not-found`, {
       headers: {
         origin: "https://chirp.blog",
+      },
+    }),
+    fetch(`${baseUrl}/api/not-found`, {
+      headers: {
+        origin: "https://www.chirp.blog",
       },
     }),
     fetch(`${baseUrl}/api/not-found`, {
@@ -67,10 +72,12 @@ test("allows the production frontend origin but not arbitrary origins", async ()
 
   assert.deepEqual(
     {
-      allowedOrigin: productionResponse.headers.get(
-        "access-control-allow-origin",
+      apexOrigin: apexResponse.headers.get("access-control-allow-origin"),
+      apexCredentials: apexResponse.headers.get(
+        "access-control-allow-credentials",
       ),
-      credentials: productionResponse.headers.get(
+      wwwOrigin: wwwResponse.headers.get("access-control-allow-origin"),
+      wwwCredentials: wwwResponse.headers.get(
         "access-control-allow-credentials",
       ),
       untrustedOrigin: untrustedResponse.headers.get(
@@ -78,8 +85,10 @@ test("allows the production frontend origin but not arbitrary origins", async ()
       ),
     },
     {
-      allowedOrigin: "https://chirp.blog",
-      credentials: "true",
+      apexOrigin: "https://chirp.blog",
+      apexCredentials: "true",
+      wwwOrigin: "https://www.chirp.blog",
+      wwwCredentials: "true",
       untrustedOrigin: null,
     },
   );
