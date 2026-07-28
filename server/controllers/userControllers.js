@@ -66,11 +66,6 @@ const registerUser = async (req, res, next) => {
       return next(new HttpError("Passwords do not match", 422));
     }
 
-    // check password length
-    if (password.length < 6) {
-      return next(new HttpError("Password must be at least 6 characters", 422));
-    }
-
     // hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);

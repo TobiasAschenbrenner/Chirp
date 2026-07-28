@@ -6,7 +6,8 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const MAX_FULL_NAME_LENGTH = 80;
 const MAX_EMAIL_LENGTH = 254;
-const MIN_PASSWORD_LENGTH = 6;
+const MIN_REGISTRATION_PASSWORD_LENGTH = 15;
+const MIN_LOGIN_PASSWORD_LENGTH = 6;
 const MAX_PASSWORD_BYTES = 72;
 const MAX_BIO_LENGTH = 160;
 const MAX_POST_LENGTH = 500;
@@ -23,9 +24,9 @@ const isStringWithinLength = (value, maxLength) =>
 const isValidEmail = (value) =>
   isNonEmptyString(value, MAX_EMAIL_LENGTH) && EMAIL_PATTERN.test(value.trim());
 
-const isValidPassword = (value) =>
+const isValidPassword = (value, minLength) =>
   typeof value === "string" &&
-  value.length >= MIN_PASSWORD_LENGTH &&
+  value.length >= minLength &&
   Buffer.byteLength(value, "utf8") <= MAX_PASSWORD_BYTES;
 
 const validateRegistrationBody = (req, res, next) => {
@@ -34,7 +35,7 @@ const validateRegistrationBody = (req, res, next) => {
   const registrationIsValid =
     isNonEmptyString(fullName, MAX_FULL_NAME_LENGTH) &&
     isValidEmail(email) &&
-    isValidPassword(password) &&
+    isValidPassword(password, MIN_REGISTRATION_PASSWORD_LENGTH) &&
     confirmPassword === password;
 
   if (!registrationIsValid) {
@@ -50,7 +51,10 @@ const validateRegistrationBody = (req, res, next) => {
 const validateLoginBody = (req, res, next) => {
   const { email, password } = req.body ?? {};
 
-  if (!isValidEmail(email) || !isValidPassword(password)) {
+  if (
+    !isValidEmail(email) ||
+    !isValidPassword(password, MIN_LOGIN_PASSWORD_LENGTH)
+  ) {
     return next(new HttpError("Invalid login data", 400));
   }
 
