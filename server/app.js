@@ -9,6 +9,17 @@ const routes = require("./routes/routes");
 
 const REQUEST_BODY_LIMIT = "16kb";
 const MAX_UPLOAD_BYTES = 1_000_000;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const GENERAL_REQUEST_LIMIT = 300;
+const AUTHENTICATION_REQUEST_LIMIT = 10;
+
+const createRateLimiter = (limit) =>
+  rateLimit({
+    windowMs: RATE_LIMIT_WINDOW_MS,
+    limit,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+  });
 
 const ALLOWED_ORIGINS = [
   "http://localhost:4200",
@@ -29,15 +40,16 @@ const configureApp = (app) => {
     }),
   );
 
-  app.use(
-    "/api",
-    rateLimit({
-      windowMs: 15 * 60 * 1000,
-      limit: 100,
-      standardHeaders: "draft-8",
-      legacyHeaders: false,
-    }),
+  const generalRateLimiter = createRateLimiter(GENERAL_REQUEST_LIMIT);
+  const authenticationRateLimiter = createRateLimiter(
+    AUTHENTICATION_REQUEST_LIMIT,
   );
+
+  app.use(
+    ["/api/users/login", "/api/users/register"],
+    authenticationRateLimiter,
+  );
+  app.use("/api", generalRateLimiter);
 
   app.use(
     express.urlencoded({

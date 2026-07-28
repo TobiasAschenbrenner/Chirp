@@ -61,17 +61,23 @@ export class Feed implements OnInit {
     private usersApi: Users,
     private postsApi: PostsApi,
     private auth: Auth,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
   ) {}
 
   ngOnInit(): void {
-    const creatorId = this.getCreatorId();
-    if (!creatorId) return;
+    const postCreator = this.post?.creator;
+
+    if (!postCreator) return;
+
+    if (typeof postCreator !== 'string') {
+      this.creator.set(postCreator);
+      return;
+    }
 
     this.creatorLoading.set(true);
 
     this.usersApi
-      .getUser(creatorId)
+      .getUser(postCreator)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (user) => {

@@ -98,7 +98,9 @@ const getPost = async (req, res, next) => {
 // PROTECTED
 const getPosts = async (req, res, next) => {
   try {
-    const posts = await PostModel.find().sort({ createdAt: -1 });
+    const posts = await PostModel.find()
+      .sort({ createdAt: -1 })
+      .populate("creator", "fullName profilePhoto");
     res.json(posts);
   } catch (error) {
     return next(new HttpError(error));
