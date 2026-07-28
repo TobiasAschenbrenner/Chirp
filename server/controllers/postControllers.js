@@ -2,7 +2,7 @@ const HttpError = require("../models/errorModel");
 const PostModel = require("../models/postModel");
 const UserModel = require("../models/userModel");
 
-const { v4: uuid } = require("uuid");
+const { randomUUID } = require("node:crypto");
 const cloudinary = require("../utils/cloudinary");
 const fs = require("fs");
 const path = require("path");
@@ -26,7 +26,7 @@ const createPost = async (req, res, next) => {
       const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp"];
       if (!allowedMimeTypes.includes(imageFile.mimetype)) {
         return next(
-          new HttpError("Only JPG, PNG, and WEBP images are allowed", 422)
+          new HttpError("Only JPG, PNG, and WEBP images are allowed", 422),
         );
       }
 
@@ -35,7 +35,7 @@ const createPost = async (req, res, next) => {
       }
 
       const fileExt = path.extname(imageFile.name);
-      const tempFilename = `${uuid()}${fileExt}`;
+      const tempFilename = `${randomUUID()}${fileExt}`;
       const tempFilePath = path.join(__dirname, "..", "uploads", tempFilename);
 
       await new Promise((resolve, reject) => {
@@ -121,7 +121,7 @@ const updatePost = async (req, res, next) => {
     const updatedPost = await PostModel.findByIdAndUpdate(
       postId,
       { body },
-      { new: true }
+      { new: true },
     );
     res.json(updatedPost).status(200);
   } catch (error) {
@@ -140,7 +140,7 @@ const deletePost = async (req, res, next) => {
     // check if creator is the same as logged in user
     if (post?.creator != req.user.id) {
       return next(
-        new HttpError("You are not allowed to delete this post", 403)
+        new HttpError("You are not allowed to delete this post", 403),
       );
     }
     const deletedPost = await PostModel.findByIdAndDelete(postId);
@@ -179,13 +179,13 @@ const likeDislikePost = async (req, res, next) => {
       updatedPost = await PostModel.findByIdAndUpdate(
         id,
         { $pull: { likes: req.user.id } },
-        { new: true }
+        { new: true },
       );
     } else {
       updatedPost = await PostModel.findByIdAndUpdate(
         id,
         { $push: { likes: req.user.id } },
-        { new: true }
+        { new: true },
       );
     }
     res.json(updatedPost);
@@ -223,14 +223,14 @@ const createBookmark = async (req, res, next) => {
       const userBookmarks = await UserModel.findByIdAndUpdate(
         req.user.id,
         { $pull: { bookmarks: id } },
-        { new: true }
+        { new: true },
       );
       res.json(userBookmarks);
     } else {
       const userBookmarks = await UserModel.findByIdAndUpdate(
         req.user.id,
         { $push: { bookmarks: id } },
-        { new: true }
+        { new: true },
       );
       res.json(userBookmarks);
     }

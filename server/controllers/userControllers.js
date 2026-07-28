@@ -2,7 +2,7 @@ const HttpError = require("../models/errorModel");
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const uuid = require("uuid").v4;
+const { randomUUID } = require("node:crypto");
 const fs = require("fs");
 const path = require("path");
 const cloudinary = require("../utils/cloudinary");
@@ -205,7 +205,7 @@ const changeUserAvatar = async (req, res, next) => {
     }
 
     const fileExt = path.extname(avatar.name);
-    const newFilename = `${uuid()}${fileExt}`;
+    const newFilename = `${randomUUID()}${fileExt}`;
     const tempFilePath = path.join(__dirname, "..", "uploads", newFilename);
 
     avatar.mv(tempFilePath, async (err) => {
