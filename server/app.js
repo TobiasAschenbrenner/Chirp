@@ -7,6 +7,8 @@ const { rateLimit } = require("express-rate-limit");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const routes = require("./routes/routes");
 
+const cookieParser = require("cookie-parser");
+
 const REQUEST_BODY_LIMIT = "16kb";
 const MAX_UPLOAD_BYTES = 1_000_000;
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
@@ -51,6 +53,8 @@ const configureApp = (app) => {
     authenticationRateLimiter,
   );
   app.use("/api", generalRateLimiter);
+
+  app.use(cookieParser());
 
   app.use(
     express.urlencoded({
