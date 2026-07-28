@@ -1,27 +1,32 @@
 <section class="profilePage">
-  <ng-container *ngIf="user() as u">
+  @if (user(); as u) {
     <app-user-profile
       [user]="u"
       (editProfile)="openEditProfile()"
       (followToggle)="toggleFollow()"
       (avatarChange)="changeAvatar($event)"
     ></app-user-profile>
-
     <h3 class="profilePage__title">{{ u.fullName }}’s posts</h3>
-  </ng-container>
+  }
 
-  <app-feed-skeleton *ngIf="loading()" [count]="3"></app-feed-skeleton>
+  @if (loading()) {
+    <app-feed-skeleton [count]="3"></app-feed-skeleton>
+  }
 
-  <ng-container *ngIf="!loading()">
-    <p class="center" *ngIf="posts().length < 1">No posts by this user</p>
+  @if (!loading()) {
+    @if (posts().length < 1) {
+      <p class="center">No posts by this user</p>
+    }
+    @if (posts().length > 0) {
+      <app-feeds
+        [posts]="posts()"
+        (postUpdated)="onPostUpdated($event)"
+        (postDeleted)="onPostDeleted($event)"
+      ></app-feeds>
+    }
+  }
 
-    <app-feeds
-      *ngIf="posts().length > 0"
-      [posts]="posts()"
-      (postUpdated)="onPostUpdated($event)"
-      (postDeleted)="onPostDeleted($event)"
-    ></app-feeds>
-  </ng-container>
-
-  <p *ngIf="error()" class="error">{{ error() }}</p>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
 </section>

@@ -1,12 +1,15 @@
 <div class="feeds">
-  <p *ngIf="posts.length === 0" class="center">No posts found</p>
+  @if (posts.length === 0) {
+    <p class="center">No posts found</p>
+  }
 
-  <app-feed
-    *ngFor="let post of posts"
-    [post]="post"
-    [bookmarked]="usersApi.isBookmarked(post._id)"
-    (postUpdated)="postUpdated.emit($event)"
-    (postDeleted)="postDeleted.emit($event)"
-    (bookmarkChanged)="bookmarkChanged.emit($event)"
-  ></app-feed>
+  @for (post of posts; track post) {
+    <app-feed
+      [post]="post"
+      [bookmarked]="usersApi.isBookmarked(post._id)"
+      (postUpdated)="postUpdated.emit($event)"
+      (postDeleted)="postDeleted.emit($event)"
+      (bookmarkChanged)="bookmarkChanged.emit($event)"
+    ></app-feed>
+  }
 </div>

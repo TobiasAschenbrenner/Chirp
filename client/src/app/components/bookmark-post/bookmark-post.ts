@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 
 import { Posts } from '../../services/posts/posts';
@@ -8,7 +8,7 @@ import { Users } from '../../services/users/users';
 @Component({
   selector: 'app-bookmark-post',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule],
   templateUrl: './bookmark-post.html',
   styleUrls: ['./bookmark-post.scss'],
 })

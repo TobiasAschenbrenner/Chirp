@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 
@@ -11,7 +11,7 @@ import { FollowerRef } from '../../models/api-user.model';
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, MatIconModule, RouterModule, ProfileImage],
+  imports: [MatIconModule, RouterModule, ProfileImage],
   templateUrl: './user-profile.html',
   styleUrls: ['./user-profile.scss'],
 })

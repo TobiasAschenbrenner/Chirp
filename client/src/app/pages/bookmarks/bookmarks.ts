@@ -1,6 +1,6 @@
 import { Component, DestroyRef, computed, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CommonModule } from '@angular/common';
+
 import { finalize } from 'rxjs/operators';
 
 import { Users } from '../../services/users/users';
@@ -12,7 +12,7 @@ import { FeedSkeleton } from '../../components/feed-skeleton/feed-skeleton';
 @Component({
   selector: 'app-bookmarks',
   standalone: true,
-  imports: [CommonModule, Feeds, FeedSkeleton],
+  imports: [Feeds, FeedSkeleton],
   templateUrl: './bookmarks.html',
   styleUrls: ['./bookmarks.scss'],
 })

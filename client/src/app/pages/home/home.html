@@ -10,17 +10,21 @@
     (modeChange)="onModeChange($event)"
   ></app-for-you-or-following>
 
-  <app-feed-skeleton *ngIf="loading()" [count]="3"></app-feed-skeleton>
+  @if (loading()) {
+    <app-feed-skeleton [count]="3"></app-feed-skeleton>
+  }
 
-  <ng-container *ngIf="!loading()">
-    <p class="center" *ngIf="posts().length < 1">No posts found</p>
-
-    <app-feeds
-      *ngIf="posts().length > 0"
-      [posts]="posts()"
-      [bookmarkedIds]="bookmarkedIds()"
-      (postUpdated)="onPostUpdated($event)"
-      (postDeleted)="onPostDeleted($event)"
-    ></app-feeds>
-  </ng-container>
+  @if (!loading()) {
+    @if (posts().length < 1) {
+      <p class="center">No posts found</p>
+    }
+    @if (posts().length > 0) {
+      <app-feeds
+        [posts]="posts()"
+        [bookmarkedIds]="bookmarkedIds()"
+        (postUpdated)="onPostUpdated($event)"
+        (postDeleted)="onPostDeleted($event)"
+      ></app-feeds>
+    }
+  }
 </section>

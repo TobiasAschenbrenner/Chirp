@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,7 +21,7 @@ import { normalizeUser } from '../../utils/normalize-user';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, Feeds, FeedSkeleton, UserProfile],
+  imports: [Feeds, FeedSkeleton, UserProfile],
   templateUrl: './profile.html',
   styleUrls: ['./profile.scss'],
 })

@@ -1,11 +1,12 @@
 <nav class="navbar">
-  <button
-    type="button"
-    class="navbar__backdrop"
-    *ngIf="open()"
-    aria-label="Close search results"
-    (click)="close()"
-  ></button>
+  @if (open()) {
+    <button
+      type="button"
+      class="navbar__backdrop"
+      aria-label="Close search results"
+      (click)="close()"
+    ></button>
+  }
 
   <div class="container navbar__container">
     <a routerLink="/home" class="navbar__logo">CHIRP</a>
@@ -18,46 +19,57 @@
           placeholder="Search"
           (focus)="open.set(true)"
           autocomplete="off"
-        />
+          />
         <button type="button" aria-label="Search">
           <mat-icon>search</mat-icon>
         </button>
       </form>
 
-      <div class="navbar__searchResults" *ngIf="open()">
-        <div class="navbar__searchLoading" *ngIf="searching()">Searching…</div>
-
-        <button
-          type="button"
-          class="navbar__searchItem"
-          *ngFor="let u of results()"
-          (click)="goToUser(u._id)"
-        >
-          <app-profile-image *ngIf="u.profilePhoto" [src]="u.profilePhoto" size="sm" />
-          <span class="navbar__searchName">{{ u.fullName }}</span>
-        </button>
-
-        <div class="navbar__searchEmpty" *ngIf="showEmptyState">No users found</div>
-      </div>
+      @if (open()) {
+        <div class="navbar__searchResults">
+          @if (searching()) {
+            <div class="navbar__searchLoading">Searching…</div>
+          }
+          @for (u of results(); track u) {
+            <button
+              type="button"
+              class="navbar__searchItem"
+              (click)="goToUser(u._id)"
+              >
+              @if (u.profilePhoto) {
+                <app-profile-image [src]="u.profilePhoto" size="sm" />
+              }
+              <span class="navbar__searchName">{{ u.fullName }}</span>
+            </button>
+          }
+          @if (showEmptyState) {
+            <div class="navbar__searchEmpty">No users found</div>
+          }
+        </div>
+      }
     </div>
 
     <div class="navbar__right">
-      <a
-        *ngIf="auth.getUserId() as userId"
-        [routerLink]="['/users', userId]"
-        class="navbar__profile"
-        aria-label="Profile"
-      >
-        <app-profile-image
-          *ngIf="user()?.profilePhoto"
-          [src]="user()!.profilePhoto ?? ''"
-          size="sm"
-        ></app-profile-image>
-      </a>
+      @if (auth.getUserId(); as userId) {
+        <a
+          [routerLink]="['/users', userId]"
+          class="navbar__profile"
+          aria-label="Profile"
+          >
+          @if (user()?.profilePhoto) {
+            <app-profile-image
+              [src]="user()!.profilePhoto ?? ''"
+              size="sm"
+            ></app-profile-image>
+          }
+        </a>
+      }
 
-      <button *ngIf="auth.isLoggedIn()" type="button" class="linkish" (click)="logout()">
-        Logout
-      </button>
+      @if (auth.isLoggedIn()) {
+        <button type="button" class="linkish" (click)="logout()">
+          Logout
+        </button>
+      }
     </div>
   </div>
 </nav>

@@ -3,9 +3,11 @@
     <h2>Sign up</h2>
 
     <form (ngSubmit)="registerUser()">
-      <p *ngIf="error" class="form__error-message">
-        {{ error }}
-      </p>
+      @if (error) {
+        <p class="form__error-message">
+          {{ error }}
+        </p>
+      }
 
       <input
         type="text"
@@ -15,7 +17,7 @@
         [attr.maxlength]="validationLimits.fullName"
         autocomplete="name"
         required
-      />
+        />
 
       <input
         type="email"
@@ -25,7 +27,7 @@
         [attr.maxlength]="validationLimits.email"
         autocomplete="email"
         required
-      />
+        />
 
       <div class="password">
         <input
@@ -38,14 +40,14 @@
           autocomplete="new-password"
           aria-describedby="password-requirements"
           required
-        />
+          />
 
         <button
           type="button"
           class="password__toggle"
           (click)="togglePassword()"
           aria-label="Toggle password visibility"
-        >
+          >
           <mat-icon>
             {{ showPassword ? 'visibility_off' : 'visibility' }}
           </mat-icon>
@@ -64,14 +66,14 @@
           [attr.maxlength]="validationLimits.passwordBytes"
           autocomplete="new-password"
           required
-        />
+          />
 
         <button
           type="button"
           class="password__toggle"
           (click)="togglePassword()"
           aria-label="Toggle password visibility"
-        >
+          >
           <mat-icon>
             {{ showPassword ? 'visibility_off' : 'visibility' }}
           </mat-icon>

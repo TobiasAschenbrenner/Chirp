@@ -9,7 +9,7 @@ import {
   ViewChild,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -25,7 +25,7 @@ import { VALIDATION_LIMITS } from '../../utils/input-validation';
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, ProfileImage],
+  imports: [FormsModule, MatIconModule, ProfileImage],
   templateUrl: './create-post.html',
   styleUrls: ['./create-post.scss'],
 })

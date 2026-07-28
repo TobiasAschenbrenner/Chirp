@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { finalize } from 'rxjs/operators';
 
@@ -11,7 +11,7 @@ import { ApiError } from '../../models/api-error.model';
 @Component({
   selector: 'app-like-post',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule],
   templateUrl: './like-post.html',
   styleUrls: ['./like-post.scss'],
 })

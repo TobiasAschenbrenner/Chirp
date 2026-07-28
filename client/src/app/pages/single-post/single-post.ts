@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,15 +22,14 @@ import { VALIDATION_LIMITS } from '../../utils/input-validation';
   selector: 'app-single-post',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     FormsModule,
     MatIconModule,
     PostComment,
     TimeAgoPipe,
     BookmarkPost,
-    ProfileImage,
-  ],
+    ProfileImage
+],
   templateUrl: './single-post.html',
   styleUrls: ['./single-post.scss'],
 })

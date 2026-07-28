@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FeedMode } from '../../models/feed-mode.model';
 
 @Component({
   selector: 'app-for-you-or-following',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './for-you-or-following.html',
   styleUrls: ['./for-you-or-following.scss'],
 })

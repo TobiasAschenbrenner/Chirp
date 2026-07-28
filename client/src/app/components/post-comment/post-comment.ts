@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit, DestroyRef, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
@@ -14,7 +14,7 @@ import { Comment } from '../../models/comment.model';
 @Component({
   selector: 'app-post-comment',
   standalone: true,
-  imports: [CommonModule, MatIconModule, TimeAgoPipe, ProfileImage, RouterModule],
+  imports: [MatIconModule, TimeAgoPipe, ProfileImage, RouterModule],
   templateUrl: './post-comment.html',
   styleUrls: ['./post-comment.scss'],
 })

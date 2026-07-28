@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-feed-skeleton',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './feed-skeleton.html',
   styleUrls: ['./feed-skeleton.scss'],
 })

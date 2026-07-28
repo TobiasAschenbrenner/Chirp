@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -11,7 +11,7 @@ import { ApiError } from '../../models/api-error.model';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, Sidebar],
+  imports: [RouterOutlet, Sidebar],
   templateUrl: './main-layout.html',
   styleUrls: ['./main-layout.scss'],
 })

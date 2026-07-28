@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 import { Feed } from '../feed/feed';
 import { Post } from '../../models/post.model';
@@ -8,7 +8,7 @@ import { Users } from '../../services/users/users';
 @Component({
   selector: 'app-feeds',
   standalone: true,
-  imports: [CommonModule, Feed],
+  imports: [Feed],
   templateUrl: './feeds.html',
   styleUrls: ['./feeds.scss'],
 })

@@ -1,26 +1,25 @@
 <article class="feed">
   <header class="feed__header">
-    <a
-      class="feed__header-left"
-      *ngIf="creator() as u; else headerPlaceholder"
-      [routerLink]="['/users', u._id]"
-      aria-label="Open profile"
-    >
-      <div class="feed__avatar">
-        <app-profile-image
-          *ngIf="u.profilePhoto"
-          [src]="u.profilePhoto"
-          size="sm"
-        ></app-profile-image>
-      </div>
-
-      <div class="feed__header-details">
-        <h4 class="feed__name">{{ u.fullName || 'User' }}</h4>
-        <small class="feed__time">{{ post.createdAt | timeAgo }}</small>
-      </div>
-    </a>
-
-    <ng-template #headerPlaceholder>
+    @if (creator(); as u) {
+      <a
+        class="feed__header-left"
+        [routerLink]="['/users', u._id]"
+        aria-label="Open profile"
+        >
+        <div class="feed__avatar">
+          @if (u.profilePhoto) {
+            <app-profile-image
+              [src]="u.profilePhoto"
+              size="sm"
+            ></app-profile-image>
+          }
+        </div>
+        <div class="feed__header-details">
+          <h4 class="feed__name">{{ u.fullName || 'User' }}</h4>
+          <small class="feed__time">{{ post.createdAt | timeAgo }}</small>
+        </div>
+      </a>
+    } @else {
       <div class="feed__header-left feed__header-left--placeholder">
         <div class="feed__avatar"></div>
         <div class="feed__header-details">
@@ -28,37 +27,42 @@
           <small class="feed__time">{{ post.createdAt | timeAgo }}</small>
         </div>
       </div>
-    </ng-template>
+    }
 
-    <div *ngIf="isOwner()" class="feed__header-actions">
-      <button type="button" class="iconBtn" (click)="startEdit()" [disabled]="busy()">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button type="button" class="iconBtn" (click)="deletePost()" [disabled]="busy()">
-        <mat-icon>delete_outline</mat-icon>
-      </button>
-    </div>
+
+    @if (isOwner()) {
+      <div class="feed__header-actions">
+        <button type="button" class="iconBtn" (click)="startEdit()" [disabled]="busy()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button type="button" class="iconBtn" (click)="deletePost()" [disabled]="busy()">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </div>
+    }
   </header>
 
   <div class="feed__body">
-    <div *ngIf="editing(); else readMode" class="feed__edit">
-      <textarea [ngModel]="editBody()" (ngModelChange)="editBody.set($event)" rows="3"></textarea>
-
-      <div class="feed__edit-actions">
-        <button type="button" class="btn" (click)="cancelEdit()" [disabled]="busy()">Cancel</button>
-        <button type="button" class="btn primary" (click)="saveEdit()" [disabled]="busy()">
-          Save
-        </button>
+    @if (editing()) {
+      <div class="feed__edit">
+        <textarea [ngModel]="editBody()" (ngModelChange)="editBody.set($event)" rows="3"></textarea>
+        <div class="feed__edit-actions">
+          <button type="button" class="btn" (click)="cancelEdit()" [disabled]="busy()">Cancel</button>
+          <button type="button" class="btn primary" (click)="saveEdit()" [disabled]="busy()">
+            Save
+          </button>
+        </div>
       </div>
-    </div>
-
-    <ng-template #readMode>
+    } @else {
       <p class="feed__text">{{ post.body }}</p>
-    </ng-template>
+    }
 
-    <div class="feed__images" *ngIf="post.image">
-      <img [src]="post.image" alt="Post image" />
-    </div>
+
+    @if (post.image) {
+      <div class="feed__images">
+        <img [src]="post.image" alt="Post image" />
+      </div>
+    }
   </div>
 
   <footer class="feed__footer">
@@ -80,10 +84,11 @@
     </div>
   </footer>
 
-  <app-edit-post-modal
-    *ngIf="editModalOpen()"
-    [postId]="post._id"
-    (updated)="onModalUpdated($event)"
-    (closed)="closeEditModal()"
-  ></app-edit-post-modal>
+  @if (editModalOpen()) {
+    <app-edit-post-modal
+      [postId]="post._id"
+      (updated)="onModalUpdated($event)"
+      (closed)="closeEditModal()"
+    ></app-edit-post-modal>
+  }
 </article>

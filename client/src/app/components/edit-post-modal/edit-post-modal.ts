@@ -1,5 +1,5 @@
 import { Component, DestroyRef, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -12,7 +12,7 @@ import { VALIDATION_LIMITS } from '../../utils/input-validation';
 @Component({
   selector: 'app-edit-post-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './edit-post-modal.html',
   styleUrls: ['./edit-post-modal.scss'],
 })

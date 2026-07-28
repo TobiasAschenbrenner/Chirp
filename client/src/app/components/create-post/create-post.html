@@ -1,15 +1,18 @@
 <form class="createPost" enctype="multipart/form-data" (ngSubmit)="onSubmit()">
-  <p *ngIf="error" class="createPost__error-message">
-    {{ error }}
-  </p>
+  @if (error) {
+    <p class="createPost__error-message">
+      {{ error }}
+    </p>
+  }
 
   <div class="createPost__top">
     <div class="createPost__avatar">
-      <app-profile-image
-        *ngIf="user() as u"
-        [src]="u.profilePhoto ?? ''"
-        size="md"
-      ></app-profile-image>
+      @if (user(); as u) {
+        <app-profile-image
+          [src]="u.profilePhoto ?? ''"
+          size="md"
+        ></app-profile-image>
+      }
     </div>
 
     <textarea
@@ -37,7 +40,7 @@
         hidden
         (change)="onFileChange($event)"
         [disabled]="loading"
-      />
+        />
 
       <button type="submit" [disabled]="!canSubmit">
         {{ loading ? 'Posting…' : 'Post' }}

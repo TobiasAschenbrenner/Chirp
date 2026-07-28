@@ -1,33 +1,38 @@
 <section class="singlePost">
-  <p *ngIf="loading()">Loading…</p>
-  <p *ngIf="error()" class="error">{{ error() }}</p>
+  @if (loading()) {
+    <p>Loading…</p>
+  }
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
 
-  <ng-container *ngIf="post() as p">
-    <a
-      class="singlePost__author feed__header"
-      *ngIf="authorId() as uid"
-      [routerLink]="['/users', uid]"
-      aria-label="Open profile"
-    >
-      <app-profile-image
-        *ngIf="creator()?.profilePhoto"
-        [src]="creator()!.profilePhoto"
-        size="sm"
-      ></app-profile-image>
-
-      <div class="feed__header-details">
-        <h4>{{ creator()?.fullName || 'User' }}</h4>
-        <small>{{ p.createdAt | timeAgo }}</small>
-      </div>
-    </a>
-
+  @if (post(); as p) {
+    @if (authorId(); as uid) {
+      <a
+        class="singlePost__author feed__header"
+        [routerLink]="['/users', uid]"
+        aria-label="Open profile"
+        >
+        @if (creator()?.profilePhoto) {
+          <app-profile-image
+            [src]="creator()!.profilePhoto"
+            size="sm"
+          ></app-profile-image>
+        }
+        <div class="feed__header-details">
+          <h4>{{ creator()?.fullName || 'User' }}</h4>
+          <small>{{ p.createdAt | timeAgo }}</small>
+        </div>
+      </a>
+    }
     <div class="feed__body">
       <p>{{ p.body }}</p>
       <div class="feed__images">
-        <img *ngIf="p.image" [src]="p.image" alt="Post image" />
+        @if (p.image) {
+          <img [src]="p.image" alt="Post image" />
+        }
       </div>
     </div>
-
     <footer class="feed__footer">
       <div class="feed__footer-left">
         <button type="button" class="feed__action" aria-label="Comments">
@@ -35,7 +40,6 @@
           <small>{{ comments().length }}</small>
         </button>
       </div>
-
       <div class="feed__footer-right">
         <app-bookmark-post
           [postId]="p._id"
@@ -43,7 +47,6 @@
         ></app-bookmark-post>
       </div>
     </footer>
-
     <ul class="singlePost__comments">
       <form class="singlePost__comments-form" (ngSubmit)="createComment()">
         <textarea
@@ -53,17 +56,16 @@
           (ngModelChange)="commentText.set($event)"
           [attr.maxlength]="validationLimits.comment"
         ></textarea>
-
         <button class="singlePost__comments-btn" type="submit" aria-label="Send">
           <mat-icon>send</mat-icon>
         </button>
       </form>
-
-      <app-post-comment
-        *ngFor="let c of comments()"
-        [comment]="c"
-        (delete)="deleteComment($event)"
-      ></app-post-comment>
+      @for (c of comments(); track c) {
+        <app-post-comment
+          [comment]="c"
+          (delete)="deleteComment($event)"
+        ></app-post-comment>
+      }
     </ul>
-  </ng-container>
+  }
 </section>

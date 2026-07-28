@@ -5,21 +5,22 @@
     routerLinkActive="active"
     [routerLinkActiveOptions]="{ exact: true }"
     aria-label="Forest"
-  >
+    >
     <span class="sidebar__icon"><mat-icon>home</mat-icon></span>
     <p class="sidebar__label">Forest</p>
   </a>
 
-  <a
-    *ngIf="userId as userId"
-    class="sidebar__item"
-    [routerLink]="['/users', userId]"
-    routerLinkActive="active"
-    aria-label="Nest"
-  >
-    <span class="sidebar__icon"><mat-icon>person_outline</mat-icon></span>
-    <p class="sidebar__label">Nest</p>
-  </a>
+  @if (userId; as userId) {
+    <a
+      class="sidebar__item"
+      [routerLink]="['/users', userId]"
+      routerLinkActive="active"
+      aria-label="Nest"
+      >
+      <span class="sidebar__icon"><mat-icon>person_outline</mat-icon></span>
+      <p class="sidebar__label">Nest</p>
+    </a>
+  }
 
   <a class="sidebar__item" routerLink="/bookmarks" routerLinkActive="active" aria-label="Seeds">
     <span class="sidebar__icon"><mat-icon>bookmark_border</mat-icon></span>

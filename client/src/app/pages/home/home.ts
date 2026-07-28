@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Observable } from 'rxjs';
 
 import { CreatePost } from '../../components/create-post/create-post';
@@ -16,7 +16,7 @@ import { FeedMode } from '../../models/feed-mode.model';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CreatePost, ForYouOrFollowing, FeedSkeleton, Feeds],
+  imports: [CreatePost, ForYouOrFollowing, FeedSkeleton, Feeds],
   templateUrl: './home.html',
   styleUrls: ['./home.scss'],
 })

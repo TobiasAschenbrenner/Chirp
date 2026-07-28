@@ -1,35 +1,40 @@
 <section class="profile">
   <div class="profile__container">
     <div class="profile__image">
-      <app-profile-image *ngIf="user.profilePhoto" [src]="user.profilePhoto" size="lg" />
+      @if (user.profilePhoto) {
+        <app-profile-image [src]="user.profilePhoto" size="lg" />
+      }
 
-      <label
-        *ngIf="isOwnProfile() && !avatarTouched()"
-        for="avatar"
-        class="profile__image-edit"
-        aria-label="Change avatar"
-      >
-        <mat-icon>upload</mat-icon>
-      </label>
+      @if (isOwnProfile() && !avatarTouched()) {
+        <label
+          for="avatar"
+          class="profile__image-edit"
+          aria-label="Change avatar"
+          >
+          <mat-icon>upload</mat-icon>
+        </label>
+      }
 
-      <button
-        *ngIf="isOwnProfile() && avatarTouched()"
-        type="button"
-        class="profile__image-btn"
-        (click)="submitAvatar()"
-        [disabled]="busy"
-        aria-label="Save avatar"
-      >
-        <mat-icon>check</mat-icon>
-      </button>
+      @if (isOwnProfile() && avatarTouched()) {
+        <button
+          type="button"
+          class="profile__image-btn"
+          (click)="submitAvatar()"
+          [disabled]="busy"
+          aria-label="Save avatar"
+          >
+          <mat-icon>check</mat-icon>
+        </button>
+      }
 
-      <input
-        *ngIf="isOwnProfile()"
-        id="avatar"
-        type="file"
-        accept="image/png, image/jpeg"
-        (change)="onPickAvatar($event)"
-      />
+      @if (isOwnProfile()) {
+        <input
+          id="avatar"
+          type="file"
+          accept="image/png, image/jpeg"
+          (change)="onPickAvatar($event)"
+          />
+      }
     </div>
 
     <h4 class="profile__name">{{ user.fullName }}</h4>
@@ -46,29 +51,33 @@
     </ul>
 
     <div class="profile__actions-wrapper">
-      <button
-        *ngIf="isOwnProfile()"
-        type="button"
-        class="btn"
-        (click)="onEditProfile()"
-        [disabled]="busy"
-      >
-        Edit profile
-      </button>
+      @if (isOwnProfile()) {
+        <button
+          type="button"
+          class="btn"
+          (click)="onEditProfile()"
+          [disabled]="busy"
+          >
+          Edit profile
+        </button>
+      }
 
-      <button
-        *ngIf="!isOwnProfile()"
-        type="button"
-        class="btn dark"
-        (click)="onFollowToggle()"
-        [disabled]="busy"
-      >
-        {{ followsUser() ? 'Unfollow' : 'Follow' }}
-      </button>
+      @if (!isOwnProfile()) {
+        <button
+          type="button"
+          class="btn dark"
+          (click)="onFollowToggle()"
+          [disabled]="busy"
+          >
+          {{ followsUser() ? 'Unfollow' : 'Follow' }}
+        </button>
+      }
     </div>
 
-    <article class="profile__bio" *ngIf="user.bio">
-      <p>{{ user.bio }}</p>
-    </article>
+    @if (user.bio) {
+      <article class="profile__bio">
+        <p>{{ user.bio }}</p>
+      </article>
+    }
   </div>
 </section>

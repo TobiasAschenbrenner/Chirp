@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,7 +15,7 @@ import { ApiError } from '../../models/api-error.model';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, ProfileImage, ReactiveFormsModule],
+  imports: [RouterModule, MatIconModule, ProfileImage, ReactiveFormsModule],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss'],
 })

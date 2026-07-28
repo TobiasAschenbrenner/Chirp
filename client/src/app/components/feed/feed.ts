@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit, signal, DestroyRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -24,7 +24,6 @@ type PostCreator = string | { _id: string };
   selector: 'app-feed',
   standalone: true,
   imports: [
-    CommonModule,
     MatIconModule,
     FormsModule,
     RouterModule,
@@ -32,8 +31,8 @@ type PostCreator = string | { _id: string };
     TimeAgoPipe,
     ProfileImage,
     BookmarkPost,
-    EditPostModal,
-  ],
+    EditPostModal
+],
   templateUrl: './feed.html',
   styleUrls: ['./feed.scss'],
 })

@@ -1,25 +1,32 @@
 <li class="comment">
-  <a *ngIf="creatorId() as uid" [routerLink]="['/users', uid]" class="comment__avatar">
-    <app-profile-image *ngIf="photoUrl()" [src]="photoUrl()!" size="sm"></app-profile-image>
-  </a>
-  <div class="comment__body">
-    <a *ngIf="creatorId() as uid" [routerLink]="['/users', uid]" class="comment__metaLink">
-      <div class="comment__meta">
-        <strong>{{ creatorName() }}</strong>
-        <small>{{ comment.createdAt | timeAgo }}</small>
-      </div>
+  @if (creatorId(); as uid) {
+    <a [routerLink]="['/users', uid]" class="comment__avatar">
+      @if (photoUrl()) {
+        <app-profile-image [src]="photoUrl()!" size="sm"></app-profile-image>
+      }
     </a>
+  }
+  <div class="comment__body">
+    @if (creatorId(); as uid) {
+      <a [routerLink]="['/users', uid]" class="comment__metaLink">
+        <div class="comment__meta">
+          <strong>{{ creatorName() }}</strong>
+          <small>{{ comment.createdAt | timeAgo }}</small>
+        </div>
+      </a>
+    }
 
     <p>{{ comment.comment }}</p>
   </div>
 
-  <button
-    *ngIf="isOwner()"
-    type="button"
-    class="comment__delete"
-    (click)="onDelete()"
-    aria-label="Delete"
-  >
-    <mat-icon>delete_outline</mat-icon>
-  </button>
+  @if (isOwner()) {
+    <button
+      type="button"
+      class="comment__delete"
+      (click)="onDelete()"
+      aria-label="Delete"
+      >
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  }
 </li>

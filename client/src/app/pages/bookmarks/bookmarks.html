@@ -1,18 +1,24 @@
 <section class="bookmarks">
   <h2 class="bookmarks__title">Bookmarks</h2>
 
-  <p *ngIf="error()" class="error">{{ error() }}</p>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
 
-  <app-feed-skeleton *ngIf="loading()" [count]="3"></app-feed-skeleton>
+  @if (loading()) {
+    <app-feed-skeleton [count]="3"></app-feed-skeleton>
+  }
 
-  <ng-container *ngIf="!loading()">
-    <p class="center" *ngIf="isEmpty()">No posts bookmarked</p>
-
-    <app-feeds
-      *ngIf="hasBookmarks()"
-      [posts]="bookmarks()"
-      [bookmarkedIds]="bookmarkedIds()"
-      (bookmarkChanged)="onBookmarkChanged($event)"
-    ></app-feeds>
-  </ng-container>
+  @if (!loading()) {
+    @if (isEmpty()) {
+      <p class="center">No posts bookmarked</p>
+    }
+    @if (hasBookmarks()) {
+      <app-feeds
+        [posts]="bookmarks()"
+        [bookmarkedIds]="bookmarkedIds()"
+        (bookmarkChanged)="onBookmarkChanged($event)"
+      ></app-feeds>
+    }
+  }
 </section>

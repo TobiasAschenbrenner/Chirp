@@ -3,7 +3,9 @@
     <h2>Sign in</h2>
 
     <form (ngSubmit)="loginUser()">
-      <p *ngIf="error" class="form__error-message">{{ error }}</p>
+      @if (error) {
+        <p class="form__error-message">{{ error }}</p>
+      }
 
       <input type="email" name="email" placeholder="Email" [(ngModel)]="loginData.email" />
 
@@ -13,14 +15,14 @@
           name="password"
           placeholder="Password"
           [(ngModel)]="loginData.password"
-        />
+          />
 
         <button
           type="button"
           class="password__toggle"
           (click)="togglePassword()"
           aria-label="Toggle password visibility"
-        >
+          >
           <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
       </div>

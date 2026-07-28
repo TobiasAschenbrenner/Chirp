@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +10,7 @@ import { EMAIL_PATTERN, utf8ByteLength, VALIDATION_LIMITS } from '../../utils/in
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MatIconModule],
+  imports: [FormsModule, RouterModule, MatIconModule],
   templateUrl: './register.html',
   styleUrls: ['./register.scss'],
 })

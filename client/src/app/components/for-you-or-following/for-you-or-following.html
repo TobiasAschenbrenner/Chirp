@@ -1,10 +1,11 @@
 <div class="forYouOrFollowing">
-  <button
-    *ngFor="let m of modes"
-    type="button"
-    [class.active]="active === m.key"
-    (click)="setMode(m.key)"
-  >
-    {{ m.label }}
-  </button>
+  @for (m of modes; track m) {
+    <button
+      type="button"
+      [class.active]="active === m.key"
+      (click)="setMode(m.key)"
+      >
+      {{ m.label }}
+    </button>
+  }
 </div>
