@@ -8,13 +8,19 @@ const notFound = (req, res, next) => {
 
 // ERROR MIDDLEWARE
 
+const isValidErrorStatus = (statusCode) =>
+  Number.isInteger(statusCode) && statusCode >= 400 && statusCode <= 599;
+
+const getErrorStatus = (error) =>
+  [error.status, error.statusCode, error.code].find(isValidErrorStatus) ?? 500;
+
 const errorHandler = (error, req, res, next) => {
-  if (res.headerSent) {
+  if (res.headersSent) {
     return next(error);
   }
 
   res
-    .status(error.code || 500)
+    .status(getErrorStatus(error))
     .json({ message: error.message || "An unknown error occurred!" });
 };
 
