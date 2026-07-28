@@ -220,3 +220,33 @@ test("rejects comments longer than 500 characters", async (t) => {
   assert.equal(response.status, 400);
   assert.equal(createCommentMock.mock.callCount(), 0);
 });
+
+test("keeps active profile action routes reachable", async () => {
+  const headers = {
+    authorization: `Bearer ${authToken}`,
+  };
+
+  const [followResponse, postsResponse, avatarResponse] = await Promise.all([
+    fetch(`${baseUrl}/api/users/not-a-valid-object-id/follow-unfollow`, {
+      headers,
+    }),
+    fetch(`${baseUrl}/api/users/not-a-valid-object-id/posts`, { headers }),
+    fetch(`${baseUrl}/api/users/avatar`, {
+      method: "POST",
+      headers,
+    }),
+  ]);
+
+  assert.deepEqual(
+    {
+      follow: followResponse.status,
+      posts: postsResponse.status,
+      avatar: avatarResponse.status,
+    },
+    {
+      follow: 400,
+      posts: 400,
+      avatar: 422,
+    },
+  );
+});
