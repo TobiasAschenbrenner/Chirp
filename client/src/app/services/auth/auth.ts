@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { finalize, Observable, shareReplay, tap } from 'rxjs';
+
 import { LoginPayload, LoginResponse, RegisterPayload } from '../../models/auth.model';
 import { environment } from '../../../environments/environment';
 
@@ -10,20 +11,48 @@ export class Auth {
   private static readonly USER_ID_KEY = 'chirp_user_id';
 
   private readonly baseUrl = environment.apiUrl;
+  private refreshRequest$: Observable<LoginResponse> | null = null;
 
   constructor(private http: HttpClient) {}
 
   login(payload: LoginPayload): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(`${this.baseUrl}/users/login`, payload)
-      .pipe(tap((res) => this.persistSession(res)));
+      .post<LoginResponse>(`${this.baseUrl}/users/login`, payload, { withCredentials: true })
+      .pipe(tap((response) => this.persistSession(response)));
   }
 
   register(payload: RegisterPayload): Observable<unknown> {
     return this.http.post(`${this.baseUrl}/users/register`, payload);
   }
 
+  refreshSession(): Observable<LoginResponse> {
+    if (!this.refreshRequest$) {
+      this.refreshRequest$ = this.http
+        .post<LoginResponse>(`${this.baseUrl}/users/refresh`, {}, { withCredentials: true })
+        .pipe(
+          tap((response) => this.persistSession(response)),
+          finalize(() => {
+            this.refreshRequest$ = null;
+          }),
+          shareReplay({
+            bufferSize: 1,
+            refCount: false,
+          }),
+        );
+    }
+
+    return this.refreshRequest$;
+  }
+
   logout(): void {
+    this.clearSession();
+
+    this.http.post<void>(`${this.baseUrl}/users/logout`, {}, { withCredentials: true }).subscribe({
+      error: () => undefined,
+    });
+  }
+
+  clearSession(): void {
     this.remove(Auth.TOKEN_KEY);
     this.remove(Auth.USER_ID_KEY);
   }
@@ -40,9 +69,9 @@ export class Auth {
     return this.read(Auth.USER_ID_KEY);
   }
 
-  private persistSession(res: LoginResponse): void {
-    this.setToken(res.token);
-    this.setUserId(res.id);
+  private persistSession(response: LoginResponse): void {
+    this.setToken(response.token);
+    this.setUserId(response.id);
   }
 
   private setToken(token: string): void {

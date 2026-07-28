@@ -66,9 +66,11 @@ describe('Auth service', () => {
 
     expect(localStorage.getItem(TOKEN_KEY)).toBe('t123');
     expect(localStorage.getItem(USER_ID_KEY)).toBe('u123');
+
+    expect(req.request.withCredentials).toBe(true);
   });
 
-  it('logout(): should remove token + user id from localStorage', () => {
+  it('logout(): should clear the session and revoke the refresh token', () => {
     localStorage.setItem(TOKEN_KEY, 't123');
     localStorage.setItem(USER_ID_KEY, 'u123');
 
@@ -76,6 +78,16 @@ describe('Auth service', () => {
 
     expect(localStorage.getItem(TOKEN_KEY)).toBeNull();
     expect(localStorage.getItem(USER_ID_KEY)).toBeNull();
+
+    const req = httpMock.expectOne('/api/users/logout');
+
+    expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBe(true);
+
+    req.flush(null, {
+      status: 204,
+      statusText: 'No Content',
+    });
   });
 
   it('isLoggedIn(): should be true when token exists', () => {
@@ -129,5 +141,36 @@ describe('Auth service', () => {
 
     expect(localStorage.getItem(TOKEN_KEY)).toBeNull();
     expect(localStorage.getItem(USER_ID_KEY)).toBeNull();
+  });
+
+  it('refreshSession(): should share one request and persist the new session', () => {
+    const responses: LoginResponse[] = [];
+
+    service.refreshSession().subscribe((response) => {
+      responses.push(response);
+    });
+
+    service.refreshSession().subscribe((response) => {
+      responses.push(response);
+    });
+
+    const req = httpMock.expectOne('/api/users/refresh');
+
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({});
+    expect(req.request.withCredentials).toBe(true);
+
+    req.flush({
+      token: 'fresh-token',
+      id: 'u123',
+    } satisfies LoginResponse);
+
+    expect(responses).toEqual([
+      { token: 'fresh-token', id: 'u123' },
+      { token: 'fresh-token', id: 'u123' },
+    ]);
+
+    expect(localStorage.getItem(TOKEN_KEY)).toBe('fresh-token');
+    expect(localStorage.getItem(USER_ID_KEY)).toBe('u123');
   });
 });
