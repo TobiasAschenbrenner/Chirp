@@ -2,16 +2,27 @@
   <h3 class="editProfile__title">Edit profile</h3>
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="editProfile__form">
-    <p *ngIf="error" class="editProfile__error">{{ error }}</p>
+    <p *ngIf="error" class="editProfile__error">
+      {{ error }}
+    </p>
 
     <label class="editProfile__field">
       <span>Full name</span>
-      <input type="text" formControlName="fullName" />
+      <input
+        type="text"
+        formControlName="fullName"
+        [attr.maxlength]="validationLimits.fullName"
+        autocomplete="name"
+      />
     </label>
 
     <label class="editProfile__field">
       <span>Bio</span>
-      <textarea rows="4" formControlName="bio"></textarea>
+      <textarea
+        rows="4"
+        formControlName="bio"
+        [attr.maxlength]="validationLimits.biography"
+      ></textarea>
     </label>
 
     <div class="editProfile__actions">

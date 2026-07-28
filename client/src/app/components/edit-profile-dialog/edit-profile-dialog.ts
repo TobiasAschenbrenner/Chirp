@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-import { Users } from '../../services/users/users';
 import { User } from '../../models/user.model';
+import { Users } from '../../services/users/users';
+import { VALIDATION_LIMITS } from '../../utils/input-validation';
 
 type EditProfileData = {
   user: User;
@@ -23,12 +24,21 @@ export class EditProfileDialog {
   private dialogRef = inject(MatDialogRef<EditProfileDialog>);
   private data = inject<EditProfileData>(MAT_DIALOG_DATA);
 
+  readonly validationLimits = VALIDATION_LIMITS;
+
   saving = false;
   error = '';
 
   form = this.fb.nonNullable.group({
-    fullName: [this.data.user.fullName || '', [Validators.required, Validators.maxLength(60)]],
-    bio: [this.data.user.bio || '', [Validators.maxLength(160)]],
+    fullName: [
+      this.data.user.fullName || '',
+      [
+        Validators.required,
+        Validators.pattern(/\S/),
+        Validators.maxLength(VALIDATION_LIMITS.fullName),
+      ],
+    ],
+    bio: [this.data.user.bio || '', [Validators.maxLength(VALIDATION_LIMITS.biography)]],
   });
 
   close(): void {
@@ -36,12 +46,21 @@ export class EditProfileDialog {
   }
 
   submit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      return;
+    }
+
+    const { fullName, bio } = this.form.getRawValue();
+
+    const profileData = {
+      fullName: fullName.trim(),
+      bio: bio.trim(),
+    };
 
     this.saving = true;
     this.error = '';
 
-    this.usersApi.updateProfile(this.form.getRawValue()).subscribe({
+    this.usersApi.updateProfile(profileData).subscribe({
       next: (updated) => this.dialogRef.close(updated),
       error: (err) => {
         console.log(err);
