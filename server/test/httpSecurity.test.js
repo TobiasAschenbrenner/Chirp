@@ -115,13 +115,47 @@ test("rejects uploaded files larger than 1 MB", async () => {
   assert.equal(response.status, 413);
 });
 
-test("rate limits repeated requests from the same client", async () => {
-  let finalResponse;
+test("allows normal browsing while strictly limiting authentication attempts", async () => {
+  let responseAfterOldLimit;
+  let generalFinalResponse;
 
-  for (let attempt = 0; attempt < 101; attempt += 1) {
-    finalResponse = await fetch(`${baseUrl}/api/not-found`);
+  for (let attempt = 1; attempt <= 301; attempt += 1) {
+    generalFinalResponse = await fetch(`${baseUrl}/api/not-found`, {
+      headers: {
+        "x-forwarded-for": "198.51.100.20",
+      },
+    });
+
+    if (attempt === 101) {
+      responseAfterOldLimit = generalFinalResponse;
+    }
   }
 
-  assert.equal(finalResponse.status, 429);
-  assert.ok(finalResponse.headers.get("retry-after"));
+  let authenticationFinalResponse;
+
+  for (let attempt = 1; attempt <= 11; attempt += 1) {
+    authenticationFinalResponse = await fetch(`${baseUrl}/api/users/login`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-forwarded-for": "198.51.100.21",
+      },
+      body: JSON.stringify({}),
+    });
+  }
+
+  assert.deepEqual(
+    {
+      afterOldLimit: responseAfterOldLimit.status,
+      afterNewLimit: generalFinalResponse.status,
+      authentication: authenticationFinalResponse.status,
+    },
+    {
+      afterOldLimit: 404,
+      afterNewLimit: 429,
+      authentication: 429,
+    },
+  );
+
+  assert.ok(authenticationFinalResponse.headers.get("retry-after"));
 });

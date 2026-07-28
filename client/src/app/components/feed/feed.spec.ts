@@ -89,6 +89,19 @@ describe('Feed', () => {
     expect(fixture.componentInstance.creator()?._id).toBe('author1');
   });
 
+  it('should use a populated creator without loading it again', () => {
+    const populatedCreator = {
+      _id: 'author1',
+      fullName: 'Embedded Author',
+      profilePhoto: 'https://example.com/avatar.png',
+    };
+
+    const fixture = createComponent({ creator: populatedCreator });
+
+    expect(users.getUser).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.creator()).toEqual(populatedCreator);
+  });
+
   it('should not load creator when post has no creator', () => {
     const fixture = createComponent({ creator: null as any });
 
