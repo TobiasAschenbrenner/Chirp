@@ -49,6 +49,14 @@ router.post("/users/login", validateLoginBody, loginUser);
 router.get("/users/search", authMiddleware, searchUsers);
 router.get("/users/bookmarks", authMiddleware, getUserBookmarks);
 router.patch("/users/edit", authMiddleware, validateProfileBody, editUser);
+router.get(
+  "/users/:id/follow-unfollow",
+  authMiddleware,
+  validateId,
+  followUnfollowUser,
+);
+router.post("/users/avatar", authMiddleware, changeUserAvatar);
+router.get("/users/:id/posts", authMiddleware, validateId, getUserPosts);
 router.get("/users/:id", authMiddleware, validateId, getUser);
 router.get("/users", authMiddleware, getUsers);
 
