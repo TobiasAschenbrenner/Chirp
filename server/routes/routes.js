@@ -35,36 +35,74 @@ const {
 
 const authMiddleware = require("../middleware/authMiddleware");
 
+const {
+  validateRegistrationBody,
+  validateLoginBody,
+  validatePostBody,
+  validateObjectIdParam,
+} = require("../middleware/requestValidation");
+
+const validateId = validateObjectIdParam("id");
+const validatePostId = validateObjectIdParam("postId");
+const validateCommentId = validateObjectIdParam("commentId");
+const validateReceiverId = validateObjectIdParam("receiverId");
+
 // USER ROUTES
-router.post("/users/register", registerUser);
-router.post("/users/login", loginUser);
+router.post("/users/register", validateRegistrationBody, registerUser);
+router.post("/users/login", validateLoginBody, loginUser);
 router.get("/users/search", authMiddleware, searchUsers);
-router.get("/users/bookmarks", authMiddleware, getUserBookmarks); // brought this route up here to avoid conflict with get users/:id
-router.get("/users/:id", authMiddleware, getUser);
+router.get("/users/bookmarks", authMiddleware, getUserBookmarks);
+router.get("/users/:id", authMiddleware, validateId, getUser);
 router.get("/users", authMiddleware, getUsers);
-router.patch("/users/:id", authMiddleware, editUser);
-router.get("/users/:id/follow-unfollow", authMiddleware, followUnfollowUser);
+router.patch("/users/:id", authMiddleware, validateId, editUser);
+router.get(
+  "/users/:id/follow-unfollow",
+  authMiddleware,
+  validateId,
+  followUnfollowUser,
+);
 router.post("/users/avatar", authMiddleware, changeUserAvatar);
-router.get("/users/:id/posts", authMiddleware, getUserPosts);
+router.get("/users/:id/posts", authMiddleware, validateId, getUserPosts);
 
 // POST ROUTES
-router.post("/posts", authMiddleware, createPost);
-router.get("/posts/following", authMiddleware, getFollowingPosts); // brought this route up here to avoid conflict with get posts/:id
-router.get("/posts/:id", authMiddleware, getPost);
+router.post("/posts", authMiddleware, validatePostBody, createPost);
+router.get("/posts/following", authMiddleware, getFollowingPosts);
+router.get("/posts/:id", authMiddleware, validateId, getPost);
 router.get("/posts", authMiddleware, getPosts);
-router.patch("/posts/:id", authMiddleware, updatePost);
-router.delete("/posts/:id", authMiddleware, deletePost);
-router.get("/posts/:id/like", authMiddleware, likeDislikePost);
-router.get("/posts/:id/bookmarks", authMiddleware, createBookmark);
+router.patch(
+  "/posts/:id",
+  authMiddleware,
+  validateId,
+  validatePostBody,
+  updatePost,
+);
+router.delete("/posts/:id", authMiddleware, validateId, deletePost);
+router.get("/posts/:id/like", authMiddleware, validateId, likeDislikePost);
+router.get("/posts/:id/bookmarks", authMiddleware, validateId, createBookmark);
 
 // COMMENT ROUTES
-router.post("/comments/:postId", authMiddleware, createComment);
-router.get("/comments/:postId", authMiddleware, getComment);
-router.delete("/comments/:commentId", authMiddleware, deleteComment);
+router.post("/comments/:postId", authMiddleware, validatePostId, createComment);
+router.get("/comments/:postId", authMiddleware, validatePostId, getComment);
+router.delete(
+  "/comments/:commentId",
+  authMiddleware,
+  validateCommentId,
+  deleteComment,
+);
 
 // MESSAGE ROUTES
-router.post("/messages/:receiverId", authMiddleware, createMessage);
-router.get("/messages/:receiverId", authMiddleware, getMessage);
+router.post(
+  "/messages/:receiverId",
+  authMiddleware,
+  validateReceiverId,
+  createMessage,
+);
+router.get(
+  "/messages/:receiverId",
+  authMiddleware,
+  validateReceiverId,
+  getMessage,
+);
 router.get("/conversations", authMiddleware, getConversations);
 
 module.exports = router;
