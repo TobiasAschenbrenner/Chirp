@@ -14,7 +14,7 @@ A live version of the application is available at:
 
 ## ✨ Features
 
-- User authentication with JWT
+- Register, log in, log out, and automatically renew expired access tokens
 - Create, edit, and delete posts
 - Comment on posts
 - Like and bookmark posts
@@ -22,7 +22,6 @@ A live version of the application is available at:
 - User profiles with bio and profile picture
 - Image uploads via Cloudinary
 - Responsive frontend
-- Unit tests for frontend components
 
 ---
 
@@ -33,7 +32,8 @@ A live version of the application is available at:
 - Angular
 - TypeScript
 - SCSS
-- Vitest (testing)
+- RxJS
+- Vitest
 
 ### Backend
 
@@ -41,15 +41,24 @@ A live version of the application is available at:
 - Express
 - MongoDB (Mongoose)
 - Cloudinary (image uploads)
+- Node.js built-in test runner
+
+### Development and Deployment
+
+- ESLint
+- GitHub Actions
+- Hostinger static hosting and VPS
 
 ---
 
 ## 📁 Project Structure
 
-```
+```bash
 chirp/
-├── client/ # Angular frontend
-└── server/ # Node.js / Express backend
+├── client/                 # Angular frontend
+├── server/                 # Express API, data models and seed script
+├── CLEAN_CODE.md           # Clean Code principles and refactoring evidence
+└── THREAT_MODEL.md         # Security threat model and implemented controls
 ```
 
 ---
@@ -58,7 +67,7 @@ chirp/
 
 ### Prerequisites
 
-- Node.js (v18+ recommended)
+- Node.js (v24+ recommended)
 - npm
 - MongoDB Atlas account
 - Cloudinary account
@@ -72,7 +81,7 @@ This file is **ignored by Git** and must be created manually.
 
 ### `server/.env`
 
-```
+```bash
 PORT=3000
 MONGO_URL=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
@@ -88,7 +97,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 ### Backend
 
-```
+```bash
 cd server
 npm install
 npm run dev
@@ -101,7 +110,7 @@ Backend runs on:
 
 ### Frontend
 
-```
+```bash
 cd client
 npm install
 npm start
@@ -112,28 +121,38 @@ Frontend runs on:
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Running Tests and Quality Checks
 
-Frontend tests are executed from the `client` folder:
+Backend tests and checks are executed from the `server` folder:
 
+```bash
+npm run lint
+npm test
 ```
-npm run test
+
+Frontend tests and checks are executed from the `client` folder:
+
+```bash
+npm run lint
+npm test -- --watch=false
+npm run build
 ```
+
+GitHub Actions runs these lint, test, build, and dependency-audit checks for pull requests and changes to `main`.
 
 ---
 
 ## 🔐 Security Considerations
 
-A dedicated threat model was created to systematically assess security risks within the application.
+The backend uses short-lived JWT access tokens, rotating refresh sessions, password hashing, request validation, authorization checks, rate limiting, restricted CORS, security headers and file-upload restrictions.
 
-The analysis follows the STRIDE framework and documents identified threats, implemented mitigations, known limitations, and potential future improvements.
-
-📄 Detailed analysis:  
-[THREAT_MODEL.md](./THREAT_MODEL.md)
+The STRIDE analysis, implemented controls, and remaining risks are documented in [THREAT_MODEL.md](./THREAT_MODEL.md).
 
 ---
 
 ## Data Model
+
+Chirp uses MongoDB collections for users, posts, comments, and refresh sessions. References are used for relationships such as post creators, followers, likes, bookmarks, and comments.
 
 <img width="2062" height="1174" alt="chirp" src="https://github.com/user-attachments/assets/fffa5b9b-ceba-4208-bc08-dc80f3808be0" />
 
@@ -143,15 +162,30 @@ The analysis follows the STRIDE framework and documents identified threats, impl
 
 The database was populated using a custom **seed script** that generates realistic demo data.
 
-The generated dataset contains approximately:
+The generated dataset contains:
 
 - 50 users
 - 500 posts
-- 2500 comments
-- 100 conversations
-- 800 messages
+- 2,500 comments
 
 This dataset was used to validate the NoSQL data model and query patterns.
+
+From the `server` directory, run:
+
+```bash
+node scripts/seed.js
+```
+
+> [!WARNING]
+> The seed script deletes all existing users, posts, and comments in the configured database
+> before inserting the demo data. Use it only with a disposable development database.
+
+---
+
+## 🧹 Clean Code
+
+The applied Clean Code principles, refactoring workflow, automated checks, and remaining
+limitations are documented in [CLEAN_CODE.md](./CLEAN_CODE.md).
 
 ---
 
@@ -159,16 +193,13 @@ This dataset was used to validate the NoSQL data model and query patterns.
 
 This application was built as a **university project** to learn about:
 
-- Modern web technologies
-- NoSQL databases (MongoDB)
-- Clean code and modular Angular components
-- Testing and maintainability
-- Identifying and mitigating common web application security threats
+- Full-stack development with Angular, Express, and MongoDB
+- NoSQL data modelling and query patterns
+- Clean Code principles, testing, and maintainability
+- Threat modelling and web-application security
 
 ---
 
 ## 🤖 Use of AI Tools
 
-AI tools were used in a supportive and limited manner during the development of this project. They were primarily used for code completion, discussing project structure and architectural decisions, understanding error messages, and reasoning about the NoSQL database model.
-
-AI assistance was also used while writing parts of this README, including explanations of the data model, development setup, and diagrams. All core implementation decisions, code integration, and final validation were performed by the author.
+AI tools were used as supporting tools for code completion, discussing architecture and refactoring options, understanding errors, and reasoning about the database and security model. They were also used to help structure parts of the project documentation. All implementation decisions, code integration, and final validation were performed by the author.
