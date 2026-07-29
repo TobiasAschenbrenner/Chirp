@@ -183,7 +183,6 @@ The repository uses:
 - ESLint for frontend and backend static analysis
 - Vitest for Angular tests
 - Node’s built-in test runner for backend tests
-- Angular production builds
 - `npm audit` for dependency vulnerability checks
 - GitHub Actions for pull requests and changes to `main`
 
@@ -199,7 +198,6 @@ npm test
 cd ../client
 npm run lint
 npm test -- --watch=false
-npm run build
 ```
 
 ## Remaining Limitations and Improvements
@@ -214,4 +212,4 @@ The project still contains areas that could be improved:
 - The feed component retains some inline-editing state alongside the edit modal, which should be simplified.
 - More complex end-to-end tests would complement the existing unit and API tests.
 
-These limitations are documented rather than hidden and provide clear targets for future refactoring.
+These limitations are documented and provide clear targets for future refactoring.
