@@ -154,7 +154,7 @@ The STRIDE analysis, implemented controls, and remaining risks are documented in
 
 Chirp uses MongoDB collections for users, posts, comments, and refresh sessions. References are used for relationships such as post creators, followers, likes, bookmarks, and comments.
 
-<img width="2062" height="1174" alt="chirp" src="https://github.com/user-attachments/assets/fffa5b9b-ceba-4208-bc08-dc80f3808be0" />
+<img width="1966" height="1059" alt="Chirp Data Model" src="https://github.com/user-attachments/assets/474daa88-5a61-4e2c-b74f-0039ef1127fc" />
 
 ---
 
