@@ -23,6 +23,8 @@ outside the model, although the impact of client-side token theft is considered.
 The diagram shows the main components, data flows, trust boundaries, protected
 data, and identified threats. Yellow sticky notes are possible threats and purple dashed circles show trust boundarys.
 
+<img width="9090" height="5390" alt="Untitled (1)" src="https://github.com/user-attachments/assets/85b40552-7042-4504-b93f-8ed0c9ffddef" />
+
 ### Main Data Flows
 
 1. The browser downloads the Angular application over HTTPS.
