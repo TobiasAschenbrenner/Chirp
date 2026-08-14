@@ -29,16 +29,6 @@ describe('UserProfile', () => {
     }).compileComponents();
   });
 
-  it('should create', () => {
-    auth.getUserId.mockReturnValue('u1');
-
-    const fixture = TestBed.createComponent(UserProfile);
-    fixture.componentInstance.user = makeUser();
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should detect own profile when auth userId matches', () => {
     auth.getUserId.mockReturnValue('u1');
 

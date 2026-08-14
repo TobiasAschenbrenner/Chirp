@@ -42,12 +42,6 @@ describe('Register', () => {
     return fixture;
   }
 
-  it('should create', () => {
-    const fixture = createComponent();
-
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should toggle password visibility', () => {
     const fixture = createComponent();
     const component = fixture.componentInstance;

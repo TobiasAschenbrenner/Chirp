@@ -10,14 +10,6 @@ describe('ProfileImage', () => {
     }).compileComponents();
   });
 
-  it('should create', () => {
-    const fixture = TestBed.createComponent(ProfileImage);
-    fixture.componentInstance.src = 'avatar.png';
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should render image with provided src', () => {
     const fixture = TestBed.createComponent(ProfileImage);
     fixture.componentInstance.src = 'http://example.com/avatar.jpg';

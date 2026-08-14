@@ -39,16 +39,6 @@ describe('LikePost', () => {
     }).compileComponents();
   });
 
-  it('should create', () => {
-    auth.getUserId.mockReturnValue('me');
-
-    const fixture = TestBed.createComponent(LikePost);
-    fixture.componentInstance.post = makePost();
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should render likes count', () => {
     auth.getUserId.mockReturnValue('me');
 

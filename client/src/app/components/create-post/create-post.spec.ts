@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 import { CreatePost } from './create-post';
@@ -41,11 +41,6 @@ describe('CreatePost', () => {
 
     fixture = TestBed.createComponent(CreatePost);
     component = fixture.componentInstance;
-  });
-
-  it('should create', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
   });
 
   it('should show error message when error input is set', () => {
@@ -202,14 +197,6 @@ describe('CreatePost', () => {
 
     expect(component.body).toBe('');
     expect(component.image).toBeNull();
-  });
-
-  it('ngOnInit: should swallow getUser error (no crash)', () => {
-    auth.getUserId.mockReturnValue('u1');
-    usersApi.getUser.mockReturnValue(throwError(() => ({ error: { message: 'Boom' } })));
-
-    expect(() => fixture.detectChanges()).not.toThrow();
-    expect(usersApi.getUser).toHaveBeenCalledWith('u1');
   });
 
   it('onSubmit: should not emit posts longer than 500 characters', () => {

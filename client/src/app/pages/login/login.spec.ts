@@ -51,11 +51,6 @@ describe('Login', () => {
     return fixture;
   }
 
-  it('should create', () => {
-    const fixture = createComponent();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should toggle password visibility', () => {
     const fixture = createComponent();
     const component = fixture.componentInstance;
@@ -120,7 +115,7 @@ describe('Login', () => {
     vi.spyOn(auth, 'login').mockReturnValueOnce(
       throwError(() => ({
         error: { message: 'Invalid credentials' },
-      }))
+      })),
     );
 
     const fixture = createComponent();

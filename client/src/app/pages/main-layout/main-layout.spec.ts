@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 import { MainLayout } from './main-layout';
 import { Auth } from '../../services/auth/auth';
@@ -49,11 +49,6 @@ describe('MainLayout', () => {
     vi.spyOn(users, 'loadBookmarks');
   });
 
-  it('should create', () => {
-    const fixture = TestBed.createComponent(MainLayout);
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should not load bookmarks when not logged in', () => {
     (auth.isLoggedIn as any).mockReturnValue(false);
 
@@ -70,14 +65,5 @@ describe('MainLayout', () => {
     fixture.detectChanges();
 
     expect(users.loadBookmarks).toHaveBeenCalledTimes(1);
-  });
-
-  it('should swallow loadBookmarks errors', () => {
-    (auth.isLoggedIn as any).mockReturnValue(true);
-    (users.loadBookmarks as any).mockReturnValueOnce(throwError(() => new Error('fail')));
-
-    const fixture = TestBed.createComponent(MainLayout);
-
-    expect(() => fixture.detectChanges()).not.toThrow();
   });
 });

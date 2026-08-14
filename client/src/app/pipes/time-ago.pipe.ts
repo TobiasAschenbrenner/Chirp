@@ -13,7 +13,7 @@ export class TimeAgoPipe implements PipeTransform {
     const diffMs = date.getTime() - Date.now(); // negative if in the past
     const diffSec = Math.round(diffMs / 1000);
 
-    const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
+    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
     const absSec = Math.abs(diffSec);
     if (absSec < 60) return rtf.format(diffSec, 'second');

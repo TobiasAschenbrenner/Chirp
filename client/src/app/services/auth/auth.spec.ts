@@ -46,10 +46,6 @@ describe('Auth service', () => {
     vi.restoreAllMocks();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
   it('login(): should POST /api/users/login and store token + user id', () => {
     const payload: LoginPayload = { email: 'tobi@test.com', password: 'pw' };
 

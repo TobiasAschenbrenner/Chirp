@@ -59,11 +59,6 @@ describe('PostComment', () => {
     return fixture;
   }
 
-  it('should create', () => {
-    const fixture = createComponent();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should load creator user on init', () => {
     const fixture = createComponent({ creator: 'author1' });
 

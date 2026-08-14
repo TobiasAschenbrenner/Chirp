@@ -39,10 +39,6 @@ describe('Users service', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
   describe('getUser (with cache)', () => {
     it('should request user by id', () => {
       service.getUser('u1').subscribe((u) => expect(u._id).toBe('u1'));

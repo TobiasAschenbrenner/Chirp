@@ -18,10 +18,6 @@ describe('FeedSkeleton', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should render default count (3)', () => {
     fixture.componentRef.setInput('count', 3);
     fixture.detectChanges();

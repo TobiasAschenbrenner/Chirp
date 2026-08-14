@@ -33,7 +33,7 @@ describe('Feeds', () => {
       comments: [],
       createdAt: new Date().toISOString(),
       creator: 'u1',
-    } as any);
+    }) as any;
 
   beforeEach(async () => {
     usersApi.isBookmarked.mockReset();
@@ -63,12 +63,6 @@ describe('Feeds', () => {
         },
       })
       .compileComponents();
-  });
-
-  it('should create', () => {
-    const fixture = TestBed.createComponent(Feeds);
-    fixture.detectChanges();
-    expect(fixture.componentInstance).toBeTruthy();
   });
 
   it('should show empty state when there are no posts', () => {

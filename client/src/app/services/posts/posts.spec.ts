@@ -31,10 +31,6 @@ describe('Posts service', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
   it('should create a post', () => {
     const formData = new FormData();
     formData.set('body', 'Hello');

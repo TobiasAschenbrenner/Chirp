@@ -10,13 +10,6 @@ describe('ForYouOrFollowing', () => {
     }).compileComponents();
   });
 
-  it('should create', () => {
-    const fixture = TestBed.createComponent(ForYouOrFollowing);
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should render two buttons', () => {
     const fixture = TestBed.createComponent(ForYouOrFollowing);
     fixture.detectChanges();

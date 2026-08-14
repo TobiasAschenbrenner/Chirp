@@ -24,11 +24,6 @@ describe('App', () => {
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should render navbar when logged in', () => {
     authMock.isLoggedIn.mockReturnValue(true);
     authMock.getUserId.mockReturnValue('u1');

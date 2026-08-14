@@ -68,15 +68,6 @@ describe('SinglePost', () => {
     vi.clearAllMocks();
   });
 
-  it('should create', () => {
-    postsApi.getPost.mockReturnValue(of(mockPost));
-
-    const fixture = TestBed.createComponent(SinglePost);
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should load post on init', () => {
     postsApi.getPost.mockReturnValue(of(mockPost));
 

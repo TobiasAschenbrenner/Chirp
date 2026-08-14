@@ -75,11 +75,6 @@ describe('Navbar', () => {
     vi.restoreAllMocks();
   });
 
-  it('should create', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
-  });
-
   it('should load the current user on init when logged in', () => {
     (auth.getUserId as any).mockReturnValue('u1');
 

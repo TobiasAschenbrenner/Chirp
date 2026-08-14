@@ -40,16 +40,6 @@ describe('EditPostModal', () => {
     });
   });
 
-  it('should create', () => {
-    const fixture = TestBed.createComponent(EditPostModal);
-    fixture.componentRef.setInput('postId', 'p1');
-
-    postsApi.getPost.mockReturnValue(of(makePost()));
-
-    fixture.detectChanges();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should load post on init and set body', () => {
     const fixture = TestBed.createComponent(EditPostModal);
     fixture.componentRef.setInput('postId', 'p1');

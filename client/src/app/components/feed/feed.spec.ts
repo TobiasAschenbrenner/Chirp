@@ -77,11 +77,6 @@ describe('Feed', () => {
     return fixture;
   }
 
-  it('should create', () => {
-    const fixture = createComponent();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should load creator on init', () => {
     const fixture = createComponent({ creator: 'author1' });
 

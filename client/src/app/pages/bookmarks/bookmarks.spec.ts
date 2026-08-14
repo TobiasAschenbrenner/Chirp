@@ -38,14 +38,6 @@ describe('Bookmarks', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
-    usersApi.getBookmarks.mockReturnValue(of({ bookmarks: [] }));
-
-    fixture.detectChanges();
-
-    expect(component).toBeTruthy();
-  });
-
   it('should load bookmarks on init', () => {
     usersApi.getBookmarks.mockReturnValue(of({ bookmarks: mockPosts }));
 

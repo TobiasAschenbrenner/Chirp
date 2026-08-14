@@ -49,11 +49,6 @@ describe('EditProfileDialog', () => {
     vi.spyOn(users, 'updateProfile');
   });
 
-  it('should create', () => {
-    const fixture = TestBed.createComponent(EditProfileDialog);
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should initialize form with user data', () => {
     const fixture = TestBed.createComponent(EditProfileDialog);
     const component = fixture.componentInstance;

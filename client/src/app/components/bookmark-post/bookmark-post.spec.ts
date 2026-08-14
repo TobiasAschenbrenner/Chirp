@@ -45,11 +45,6 @@ describe('BookmarkPost', () => {
     return (iconEl?.textContent ?? '').trim();
   }
 
-  it('should create', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
-  });
-
   it('should render as not bookmarked by default', () => {
     fixture.detectChanges();
 
@@ -110,16 +105,23 @@ describe('BookmarkPost', () => {
     expect(getIconText()).toBe('bookmark_border');
   });
 
-  it('toggleBookmark: should log error when API fails', () => {
-    const err = new Error('Boom');
-    postsApi.toggleBookmark.mockReturnValue(throwError(() => err));
+  it('should reset busy state without changing the bookmark when the API fails', () => {
+    const error = new Error('Boom');
+    postsApi.toggleBookmark.mockReturnValue(throwError(() => error));
 
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const changedSpy = vi.fn();
+    component.changed.subscribe(changedSpy);
 
     fixture.detectChanges();
     component.toggleBookmark();
 
-    expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
+    expect(postsApi.toggleBookmark).toHaveBeenCalledWith('p1');
+    expect(component.busy()).toBe(false);
+    expect(component.bookmarked()).toBe(false);
+    expect(usersApi.setBookmarked).not.toHaveBeenCalled();
+    expect(changedSpy).not.toHaveBeenCalled();
+
+    consoleError.mockRestore();
   });
 });

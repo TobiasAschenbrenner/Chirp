@@ -90,16 +90,6 @@ describe('Profile', () => {
       .compileComponents();
   });
 
-  it('should create', () => {
-    usersApi.getUser.mockReturnValue(of({ _id: 'u1', fullName: 'Alice', followers: [] }));
-    usersApi.getUserPosts.mockReturnValue(of({ posts: [] }));
-
-    const fixture = TestBed.createComponent(Profile);
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should load profile when route param id is set', () => {
     usersApi.getUser.mockReturnValue(of({ _id: 'u1', fullName: 'Alice', followers: [] }));
     usersApi.getUserPosts.mockReturnValue(of({ posts: [{ _id: 'p1' }, { _id: 'p2' }] }));
@@ -196,7 +186,7 @@ describe('Profile', () => {
           { _id: 'p1', body: 'a' },
           { _id: 'p2', body: 'b' },
         ],
-      })
+      }),
     );
 
     const fixture = TestBed.createComponent(Profile);
