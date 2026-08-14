@@ -44,3 +44,7 @@ Thumbs.db
 
 # Hosting / server-specific
 .htaccess
+d
+# Test output
+/playwright-report/
+/test-results/
