@@ -25,6 +25,7 @@ const createRateLimiter = (limit) =>
 
 const ALLOWED_ORIGINS = [
   "http://localhost:4200",
+  "http://localhost:4201",
   "http://localhost:5173",
   "https://chirp.blog",
   "https://www.chirp.blog",

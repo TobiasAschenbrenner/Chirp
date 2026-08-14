@@ -7,6 +7,7 @@
     "test": "node --test",
     "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=\"app.js\" --test-coverage-include=\"controllers/*.js\" --test-coverage-include=\"middleware/*.js\" --test-coverage-include=\"models/*.js\" --test-coverage-include=\"routes/*.js\" --test-coverage-include=\"utils/*.js\"",
     "dev": "nodemon index.js",
+    "start:e2e": "node e2e-server.js",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -30,6 +31,7 @@
     "@eslint/js": "^10.0.1",
     "eslint": "^10.8.0",
     "globals": "^17.8.0",
+    "mongodb-memory-server-core": "^11.2.0",
     "nodemon": "^3.1.10"
   }
 }
