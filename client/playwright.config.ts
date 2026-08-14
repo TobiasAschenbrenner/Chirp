@@ -8,7 +8,7 @@ export default defineConfig({
   reporter: 'list',
 
   use: {
-    baseURL: 'http://127.0.0.1:4200',
+    baseURL: 'http://localhost:4201',
     trace: 'retain-on-failure',
   },
 
@@ -19,10 +19,25 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: 'npm start -- --host 127.0.0.1',
-    url: 'http://127.0.0.1:4200',
-    reuseExistingServer: true,
-    timeout: 120_000,
-  },
+  webServer: [
+    {
+      name: 'E2E backend',
+      command: 'npm run start:e2e',
+      cwd: '../server',
+      url: 'http://127.0.0.1:3001/api/posts',
+      reuseExistingServer: false,
+      gracefulShutdown: {
+        signal: 'SIGTERM',
+        timeout: 5_000,
+      },
+      timeout: 120_000,
+    },
+    {
+      name: 'Angular frontend',
+      command: 'npm run start:e2e',
+      url: 'http://localhost:4201',
+      reuseExistingServer: false,
+      timeout: 120_000,
+    },
+  ],
 });
