@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=\"app.js\" --test-coverage-include=\"controllers/*.js\" --test-coverage-include=\"middleware/*.js\" --test-coverage-include=\"models/*.js\" --test-coverage-include=\"routes/*.js\" --test-coverage-include=\"utils/*.js\"",
     "dev": "nodemon index.js",
     "lint": "eslint ."
   },
